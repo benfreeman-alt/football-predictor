@@ -1,0 +1,7 @@
+election_year,election_type,state,candidate,party,votes,vote_share,winner
+2016,Presidential,Pennsylvania,Donald Trump,Republican,2970733,48.18,True
+2016,Presidential,Pennsylvania,Hillary Clinton,Democratic,2926441,47.46,False
+2020,Presidential,Pennsylvania,Joe Biden,Democratic,3458229,50.01,True
+2020,Presidential,Pennsylvania,Donald Trump,Republican,3377674,48.84,False
+2024,Presidential,Pennsylvania,Donald Trump,Republican,3500000,50.7,True
+2024,Presidential,Pennsylvania,Kamala Harris,Democratic,3400000,49.3,False

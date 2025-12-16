@@ -1,0 +1,3 @@
+election_year,state,Democratic,Republican,margin,prev_election_margin,historical_avg_margin,final_poll_dem,final_poll_rep,final_poll_margin,early_poll_dem,early_poll_rep,poll_momentum_dem,poll_momentum_rep,poll_volatility,num_polls,gdp_growth_q3,unemployment_q3,inflation_q3,consumer_confidence_q3,gdp_trend,unemployment_trend,inflation_trend
+2016,Pennsylvania,47.46,48.18,0.7199999999999989,,,,,,,,,,,,3.0693167890087247,4.952941176470588,3.191318362542587,117.95867334592975,2.7507884423951556,4.976470588235294,2.8474768382268927
+2020,Pennsylvania,50.01,48.84,-1.1699999999999946,0.7199999999999989,0.7199999999999989,,,,,,,,,,4.113541488560708,4.576470588235294,2.430258272506316,85.39291126706725,3.216145073527129,4.6117647058823525,2.9467990306789966

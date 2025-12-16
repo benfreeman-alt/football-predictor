@@ -1,0 +1,14 @@
+prev_election_margin
+historical_avg_margin
+final_poll_dem
+final_poll_rep
+final_poll_margin
+poll_momentum_dem
+poll_momentum_rep
+poll_volatility
+gdp_growth_q3
+unemployment_q3
+inflation_q3
+consumer_confidence_q3
+gdp_trend
+unemployment_trend

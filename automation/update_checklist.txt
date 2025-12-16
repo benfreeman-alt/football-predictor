@@ -1,0 +1,24 @@
+
+=" * 70)
+UPDATE CHECKLIST - 2025-12-09
+======================================================================
+
+MONTHLY UPDATES (1st of each month):
+[ ] Download latest GDP data (GDPC1) from FRED
+[ ] Download latest Unemployment data (UNRATE) from FRED  
+[ ] Download latest CPI/Inflation data (CPIAUCSL) from FRED
+[ ] Download latest Consumer Confidence (UMCSENT) from FRED
+[ ] Run: python train_with_economics.py
+
+WEEKLY UPDATES (During election season - Aug-Nov 2026):
+[ ] Check FiveThirtyEight for new 2026 Senate polling
+[ ] Download polling CSVs to real_data/polling/
+[ ] Run: python train_with_polling.py
+[ ] Run: python confidence_based_system.py
+
+AS NEEDED:
+[ ] When new markets open: Run prediction script
+[ ] After election: Update results, retrain models
+[ ] Quarterly: Review model performance
+
+======================================================================

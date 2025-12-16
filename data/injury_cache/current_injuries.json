@@ -1,0 +1,986 @@
+{
+  "Player": [
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    },
+    {
+      "player": "Reason",
+      "injury": "Further Detail",
+      "status": "Potential Return"
+    }
+  ],
+  "PlayerBen Gannon-Doak": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailNov 21: 'Ben has a hamstring injury, it's a bad one, and he will be out for some time. Today, we had a consult with a surgeon to see if it\u2019s something that has to go through surgery, or we could go more conservative. Ben will be out for some months, which is really bad news.'Player Page \u25b8",
+      "status": "Potential Return21/02/2026"
+    }
+  ],
+  "PlayerVeljko Milosavljevic": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 12: 'It's not a big injury. I think he has been lucky, because the ACL, MCL, everything is intact, but he has a small injury behind the knee, affecting the capsule.'",
+      "status": "Potential Return21/02/2026"
+    }
+  ],
+  "PlayerRyan Christie": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 28: 'It happened with the national team. He felt it straight away [vs Greece]... He came back... [and] wanted to play with us. At the end of the game, he felt something was not going well. We made the MRI. It could be 3-4 weeks, something like this.'Player Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerLewis Cook": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailSending Off - Red CardPlayer Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerMarcos Senesi Baron": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 12: 'Marcos was the one that finished the game with some cramps and still is dealing with some issues there, but there is not a proper muscle injury. So, we hope he\u2019s available also for Monday, but we are not still sure.'Player Page \u25b8",
+      "status": "Potential Return15/12/2025"
+    }
+  ],
+  "PlayerMatai Akinmboni": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailNov 07: 'The only one we could say is Matai Akinmboni, that is normally trains with us, plays with the development squad, but has had a muscle injury again and he's recovering.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerCristhian Mosquera Ibarguen": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailDec 06: 'He's going to be out for weeks. Unfortunately, it's much more than what we expected. But the player was feeling it, so he's going to be out for weeks.'",
+      "status": "Potential Return03/01/2026"
+    }
+  ],
+  "PlayerKai Havertz": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 02: 'Matter of weeks. Let's see how it evolves... He's doing really well, he's doing stuff on the pitch, but I think he needs some time. He was doing everything; he could not go to the next level. We are all desperate to have him.'Player Page \u25b8",
+      "status": "Potential Return30/12/2025"
+    }
+  ],
+  "PlayerGabriel dos Santos Magalhaes": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailDec 02: 'Big Gabi is doing very well, but that's weeks as well.'Player Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerRiccardo Calafiori": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerMax Dowman": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailDec 09: 'Max picked up an injury last weekend and had to come off. So he did some scans, and he is going to be out for weeks.'",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerBen White": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 13: 'It looks like a hamstring [injury], so we don't know the extent of that, but probably tomorrow or the day after, we'll know more.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerRoss Barkley": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 02: 'Ruled out as well is Ross Barkley, his [knee] injury is more than we expected. I don\u2019t know exactly, but maybe 8-10-12 weeks. Hopefully, a little bit less.'Player Page \u25b8",
+      "status": "Potential Return21/02/2026"
+    }
+  ],
+  "PlayerTyrone Mings": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 02: 'Tyrone is out for tomorrow, I think four weeks more to be available.'Player Page \u25b8",
+      "status": "Potential Return03/01/2026"
+    }
+  ],
+  "PlayerJadon Sancho": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailUnable to Face Parent ClubPlayer Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerEmiliano Martinez": [
+    {
+      "player": "ReasonLower Back Injury",
+      "injury": "Further DetailDec 12: 'We need now to know how they are - the players who played [yesterday] and the players who were injured... We are training now, and we are going to train tomorrow morning. And then travel to London. I don't know.'Player Page \u25b8",
+      "status": "Potential Return21/12/2025"
+    }
+  ],
+  "PlayerPau Torres": [
+    {
+      "player": "ReasonCalf/Shin/Heel Injury",
+      "injury": "Further DetailDec 12: 'We need now to know how they are - the players who played [yesterday] and the players who were injured. We are training now, and we are going to train tomorrow morning. And then travel to London. I don't know.'Player Page \u25b8",
+      "status": "Potential Return21/12/2025"
+    }
+  ],
+  "PlayerFabio Freitas Gouveia Carvalho": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 28: 'Fabio had his operation yesterday, which went well. We\u2019re delighted about that, and we\u2019ll look after him on his journey back to fitness. Apart from that, we\u2019re in a pretty good place.'Player Page \u25b8",
+      "status": "Potential Return12/09/2026"
+    }
+  ],
+  "PlayerAntoni Milambo": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 06: 'Milambo underwent anterior cruciate ligament (ACL) reconstruction on Tuesday. The midfielder will now begin the initial stages of his rehabilitation at the club.'Player Page \u25b8",
+      "status": "Potential Return10/08/2026"
+    }
+  ],
+  "PlayerDango Ouattara": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerFrank Onyeka": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerJoshua Dasilva": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 06: 'Dasilva has had a long recovery from an ACL repair, with two subsequent surgeries towards the end of last season. He is now in a good position and back on the grass, continuing to build his fitness. The plan is for him to return to team training next month and be reintegrated from there.'Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerKevin Schade": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerReiss Nelson": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 11: 'Reiss is doing pretty well. He took a knock a week or so ago, so we'll see how he shapes up for Sunday. He should be in and around being available for Sunday. We'll see how he goes over the next few days.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerStefanos Tzimas": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 12:  'I can confirm [it is an ACL]. We see him, he is here. He is already starting his rehab. He will have surgery, and we have big trust in the doctors and our medical dept. We are quite convinced he will be back as quick as possible and in even better shape.'",
+      "status": "Potential Return12/09/2026"
+    }
+  ],
+  "PlayerAdam Webster": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailJuly 26: 'Adam suffered a knee ligament injury during training last week, and he will undergo surgery in the coming weeks... It\u2019s too early to put a timescale on his recovery period, but it\u2019s fair to say he will miss a large part of the season.'Player Page \u25b8",
+      "status": "Potential Return01/06/2026"
+    }
+  ],
+  "PlayerCarlos Baleba": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerSolomon March": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 12: 'Solly, I think, he will be back in two or three weeks.'Player Page \u25b8",
+      "status": "Potential Return30/12/2025"
+    }
+  ],
+  "PlayerLewis Dunk": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerDiego Gomez Amarilla": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerZeki Amdouni": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 20: 'It's brilliant that he's back on the grass, and again, seeing him today, I'm really pleased he's on the grass, but it's still a little bit of a journey for Zek. He\u2019s certainly heading in the right direction, though, and I'm really pleased with that.'Player Page \u25b8",
+      "status": "Potential Return04/04/2026"
+    }
+  ],
+  "PlayerLyle Foster": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerConnor Roberts": [
+    {
+      "player": "ReasonCalf/Shin/Heel Injury",
+      "injury": "Further DetailOct 16: 'There was an issue there in and around his Achilles that we thought we could maybe manage a little bit. There were some options, a more conservative option, which we went down the route of, but that hasn\u2019t seemed to work. We\u2019ve now got to that point where we've made a decision to actually get this fixed now.'Player Page \u25b8",
+      "status": "Potential Return17/01/2026"
+    }
+  ],
+  "PlayerBashir Humphreys": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 02: 'He had a bit of a setback. He's back on the grass, and he's getting there, but it's still going to be a few weeks away. That\u2019s the reason Bash has not been involved, so it\u2019s not down to selection, it\u2019s down to injury.'Player Page \u25b8",
+      "status": "Potential Return03/01/2026"
+    }
+  ],
+  "PlayerJordan Beyer": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailOct 16: 'Jordan had a little bit of a setback with his hamstring. So, again, not too long, but not in contention in the foreseeable.'Player Page \u25b8",
+      "status": "Potential Return03/01/2026"
+    }
+  ],
+  "PlayerHannibal Mejbri": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailDec 05: 'An independent regulatory commission has sanctioned Hannibal Mejbri for misconduct... It was alleged that the player acted in breach of the laws of the game and/or in an improper manner and/or used abusive and/or indecent behaviour by spitting at or in the direction of Leeds supporters.'",
+      "status": "Potential Return30/12/2025"
+    }
+  ],
+  "PlayerLucas Pires": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailSending Off - Red Card",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerKyle Walker": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerLevi Colwill": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailAug 07: 'Levi has today undergone successful surgery [for] an ACL injury. Medical assessments confirmed surgery would be the required course of action. Levi will now begin his recovery and be supported by the medical department at Cobham during his rehab phase.'Player Page \u25b8",
+      "status": "Potential Return01/06/2026"
+    }
+  ],
+  "PlayerLiam Delap": [
+    {
+      "player": "ReasonShoulder Injury",
+      "injury": "Further DetailDec 12: 'We don't know yet. It can be still, 2,3, 4 weeks... We don't know exactly how many days he needs.'Player Page \u25b8",
+      "status": "Potential Return07/01/2026"
+    }
+  ],
+  "PlayerDario Luis Essugo": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 02: 'Dario, he was okay, started some sessions with us, but he needs to slow down a little bit and will be out, but we hope nothing important. We hope he will be fine.'Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerRomeo Lavia": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 05: 'It's a muscle problem. We don't know yet when he can be back. We don't know [if it will be long or short-term].'Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerMoises Caicedo Corozo": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailSending Off - Red Card",
+      "status": "Potential Return16/12/2025"
+    }
+  ],
+  "PlayerMykhailo Mudryk": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailJune 18: 'We can confirm that Mykhailo Mudryk has been charged with Anti-Doping Rule Violations alleging the presence and/or use of a prohibited substance, in terms of Regulations 3 and 4 of The FA's Anti-Doping Regulations. As this is an ongoing case, we are not in a position to comment further at this time.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerDaniel Munoz Mejia": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 10: 'It's bad news. We will miss Dani for a few weeks; he will undergo surgery. The prognosis is 4-6 weeks, then he should be ready to play. But always, when you undergo surgery, you never know. We are always cautious. It doesn't look so serious.'Player Page \u25b8",
+      "status": "Potential Return17/01/2026"
+    }
+  ],
+  "PlayerCheick Doucoure": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailAug 08: 'We hoped that Cheicky could return for the Austria camp for training. We think Chadi [Riad] will return after his ACL [injury] in October or November. Now it looks like the timeline of Cheicky is more or less the same.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerChadi Riad Dnanou": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 21: 'Chadi is a little tricky. It\u2019s always a little up and down. We have 2-3 days where it looks really good, but then there are one or two where it doesn\u2019t. He\u2019s not always training. It\u2019s a daily decision. We are just doing the best for him. We want to be really cautious because he\u2019s been out for such a long time.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerDaichi Kamada": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 14: 'He stretched when he landed and overstretched the hamstring. We will assess him tomorrow. It hurts because it looks like we will miss him now for a little bit longer.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerRio Cardines": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailNov 05: 'Rio has a minor adductor injury, and he won\u2019t be available.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerCaleb Kporha": [
+    {
+      "player": "ReasonLower Back Injury",
+      "injury": "Further DetailSept 26: 'It\u2019s just Caleb Kporha who can\u2019t train at the moment.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerSeamus Coleman": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 05: 'Seamus pulled his hamstring, so he is going to be out for a little while. I don't know exactly the timescale on it.'Player Page \u25b8",
+      "status": "Potential Return31/01/2026"
+    }
+  ],
+  "PlayerIdrissa Gana Gueye": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerIliman Baroy Ndiaye": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerJarrad Branthwaite": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 12: 'Jarrad (Branthwaite) and Merlin (Rohl) are back on the grass and doing some work. Merlin is obviously much further on in his recovery than Jarrad, but they are both back on the grass now. Hopefully, there is a chance we get them both back soon.' Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerMerlin Rohl": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailDec 12: 'Jarrad (Branthwaite) and Merlin (Rohl) are back on the grass and doing some work. Merlin is obviously much further on in his recovery than Jarrad, but they are both back on the grass now. Hopefully, there is a chance we get them both back soon.' Player Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerJack Grealish": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 13: 'Jack felt his hamstring a little bit as well, so we just need to be careful.' Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerKiernan Dewsbury-Hall": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 13: 'I'll find out later what it is. He had a bit of tightness already [in his hamstring], and then he felt it during the game.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerRodrigo Muniz Carvalho": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailNov 27: 'He's getting better. I was just speaking with him, and he's getting good feelings. He's doing individual work on the [training] pitch.'Player Page \u25b8",
+      "status": "Potential Return21/02/2026"
+    }
+  ],
+  "PlayerCalvin Bassey": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerSamuel Chukwueze": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerAlex Iwobi": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerRyan Sessegnon": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 15: 'We have to be careful with him, he's OK. He's already running on the pitch, and is not going to be long. He's already doing individual work, probably some weeks, but I cannot give you a timescale because we see how he's going to react this week.'Player Page \u25b8",
+      "status": "Potential Return01/01/2026"
+    }
+  ],
+  "PlayerJonah Kusi-Asare": [
+    {
+      "player": "ReasonIllness",
+      "injury": "Further DetailDec 15: 'He didn't have a good week - he was ill - and lost one or two sessions. We decided not to go with him [at Turf Moor]. He trained yesterday, and he is going to be in contention.'",
+      "status": "Potential Return17/12/2025"
+    }
+  ],
+  "PlayerDaniel James": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 02: 'His hamstring tendon is injured. So, as it stands, it looks like he could do it in a conservative way, but [even then], he will probably miss the next eight weeks. So, as it stands, we have to expect that he's out for two months at least. It could be worse with surgery.'Player Page \u25b8",
+      "status": "Potential Return31/01/2026"
+    }
+  ],
+  "PlayerSean Longstaff": [
+    {
+      "player": "ReasonCalf/Shin/Heel Injury",
+      "injury": "Further DetailNov 27: 'Sadly, Sean will miss the game - he is out with a calf injury. He is expected to be out 4-6 weeks, so we will miss him for a while. It's, of course, not ideal.'Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerLukas Nmecha": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 12: 'He will miss this game. He is still a bit symptomatic, and it is still not completely healed. The first step for him will be to return to team training. I want him back as soon as possible, hopefully for Palace. He's still in individual training.'",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerGiovanni Leoni": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailSept 26: 'He is not in a good place because he tore his ACL, which means he will be out around a year. Being so young and coming to a new country and playing so well in your first game, it's very hard to take the positives. But you try to look at that, and that is that he is still so young, and he has so many years still to go after he recovers.'Player Page \u25b8",
+      "status": "Potential Return03/08/2026"
+    }
+  ],
+  "PlayerMohamed Salah": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerCody Gakpo": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 12: 'It's going to be weeks. With Cody, it's a muscle injury, and Wata is an ankle injury.'Player Page \u25b8",
+      "status": "Potential Return01/01/2026"
+    }
+  ],
+  "PlayerWataru Endo": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailDec 12: 'It's going to be weeks. With Cody, it's a muscle injury, and Wata is an ankle injury.'Player Page \u25b8",
+      "status": "Potential Return01/01/2026"
+    }
+  ],
+  "PlayerJeremie Frimpong": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 02: 'Connor got into a training session yesterday for the first time. He is not 100 per cent yet; we need to manage it a bit, so don't get your hopes up too soon. We expect the same with Jeremie next week.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerConor Bradley": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerJoe Gomez": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 13: 'If I have a player who goes off with a muscle injury like Joe, that's normally not a positive thing. I would not expect him to be in the squad [at Spurs]. But sometimes you get a positive surprise.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerDominik Szoboszlai": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailDec 13: 'It didn't look great when I just saw him. But he has unbelievable mentality, so let's hope for the best.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerMateo Kovacic": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailNov 02: 'He will be out for a while... He still has a problem with the ankle; a little calcification [is] still there. We'll wait on him for the last part of the season.'Player Page \u25b8",
+      "status": "Potential Return14/03/2026"
+    }
+  ],
+  "PlayerRayan Ait-Nouri": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerOmar Marmoush": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerJohn Stones": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 12: 'It was [his] thigh, I think. It wasn't something too big; he will be back soon.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerRodrigo Hernandez Cascante": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 12: 'Rodri is training really well. He is doing his rehab really well, and he looks sharper and sharper every day. But I don't think we are going to see him for the weekend - he is the process, definitely.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerJeremy Doku": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailLower Leg InjuryPlayer Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerHarry Maguire": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailNov 28: 'It will take a little bit longer, and we are taking care of him. Harry, the same.'Player Page \u25b8",
+      "status": "Potential Return26/12/2025"
+    }
+  ],
+  "PlayerMatthijs de Ligt": [
+    {
+      "player": "ReasonLower Back Injury",
+      "injury": "Further DetailDec 12: 'I think he has something in his back. I don't know for sure... sometimes you see it's not a big injury - he finished the game quite well against Palace - but sometimes he feels a little pain, and we have to be careful.'Player Page \u25b8",
+      "status": "Potential Return21/12/2025"
+    }
+  ],
+  "PlayerBryan Mbeumo": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 12: 'I expect today to have a decision [on his AFCoN departure], or maybe tomorrow, but we are waiting until the last moment to have all the players available.'Player Page \u25b8",
+      "status": "Potential Return15/12/2025"
+    }
+  ],
+  "PlayerAmad Diallo Traore": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 12: 'I expect today to have a decision [on his AFCoN departure], or maybe tomorrow, but we are waiting until the last moment to have all the players available.'Player Page \u25b8",
+      "status": "Potential Return15/12/2025"
+    }
+  ],
+  "PlayerNoussair Mazraoui": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 12: 'I expect today to have a decision [on his AFCoN departure], or maybe tomorrow, but we are waiting until the last moment to have all the players available.'Player Page \u25b8",
+      "status": "Potential Return15/12/2025"
+    }
+  ],
+  "PlayerBenjamin Sesko": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 12: 'Ben, we have to see if he's available. He had some [food] poisoning. So, let's wait... we have two trainings still, but the other two are out.'Player Page \u25b8",
+      "status": "Potential Return15/12/2025"
+    }
+  ],
+  "PlayerKieran Trippier": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailNov 28: 'Kieran had a scan on his hamstring, and we think it is roughly about a month, give or take.'Player Page \u25b8",
+      "status": "Potential Return04/01/2026"
+    }
+  ],
+  "PlayerSven Botman": [
+    {
+      "player": "ReasonLower Back Injury",
+      "injury": "Further DetailDec 05: 'Sven has had an injection in his back, I believe, but I haven't seen him personally since the Tottenham game. We hope that will bring about his return quite quickly, but we think there's a timeframe of about a week for the injection to work.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerNick Pope": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailDec 01: 'No further update from Saturday. Again, he is one of a number of players we will analyse earlier this week and try to get a proper diagnosis.'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerEmil Krafth": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailNov 28: 'Emil came back from international duty with a knee issue. We don't think it's anything too serious. He has had a scan, but this game will probably be too soon.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerDan Burn": [
+    {
+      "player": "ReasonChest/Abdominal Injury",
+      "injury": "Further DetailDec 14: 'Dan has gone to hospital for a check of his ribs, so hopefully he will be OK.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerWilliam Osula": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailNov 07: 'It's something he's been feeling for a little bit, but it's been functional. He's been able to train and play. It was getting to the stage when it was affecting him a little bit more. He had a scan, and it told us to pull back a bit. It's not a serious injury; we expect it to be weeks, not any longer.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerWilly Boly": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerIbrahim Sangare": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerOlaoluwa Aina": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 04: 'Ola Aina... still a bit of time yet.'Player Page \u25b8",
+      "status": "Potential Return03/01/2026"
+    }
+  ],
+  "PlayerChris Wood": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 09: 'Woody is making progress, which is good. He has had a couple of days on the grass. It is still a bit of a slow-burner; it is not going to be immediate, but he is back out there and is just starting the process, so that is good news.'Player Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerTaiwo Awoniyi": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailDec 04: 'Taiwo is on the grass and doing well...'Player Page \u25b8",
+      "status": "Potential Return22/12/2025"
+    }
+  ],
+  "PlayerMatz Sels": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailDec 14: 'It was the same with Matz, if it goes worse, then that\u2019s a longer period [out]. We looked at it and said: 'What do we gain against what do we lose, if it flares up again?' We just had to be cautious.'",
+      "status": "Potential Return22/12/2025"
+    }
+  ],
+  "PlayerNicolas Dominguez": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 14: 'Unfortunately, he's got a knee issue. It's nothing serious. We've had it scanned. His knee blew up with fluid in it. I think it was a cyst on his knee. Because we've got these eight days [without a game], we didn't risk it.'Player Page \u25b8",
+      "status": "Potential Return22/12/2025"
+    }
+  ],
+  "PlayerRyan Yates": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 10: 'Yatesy has got a situation with his hamstring that isn\u2019t going to be quick. We don\u2019t think it\u2019s too serious in the sense that he needs anything doing, but I think it\u2019s going to be a slow one. We will wait and see.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerNoah Sadiki": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerReinildo Isnard Mandava": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerArthur Masuaku": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerBertrand Isidore Traore": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerMouhamadou Habib Diarra": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerChemsdine Talbi": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerLuke O'Nien": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailSending Off - Red CardPlayer Page \u25b8",
+      "status": "Potential Return01/01/2026"
+    }
+  ],
+  "PlayerAjibola Afolarin Alese": [
+    {
+      "player": "ReasonShoulder Injury",
+      "injury": "Further DetailSept 11: 'Aji is close to coming back, but after a long period without playing, it is still hard for him to reconnect with the level, so we will have to be patient.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerJames Maddison": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 08: 'It's very early stages. It's still a long-term injury, so it's good to see him out there, but very early stages. There's no specific time frame. It will be a long time, unfortunately, before he's available.'Player Page \u25b8",
+      "status": "Potential Return01/06/2026"
+    }
+  ],
+  "PlayerPape Matar Sarr": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerDestiny Udogie": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 08: 'Destiny, as I said after the [Brentford] game, picked up a hamstring injury at the end of the Newcastle game, so he\u2019s out until January, unfortunately.'Player Page \u25b8",
+      "status": "Potential Return10/01/2026"
+    }
+  ],
+  "PlayerDominic Solanke": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailDec 12: 'He is back on the grass and training individually. I guess it's good news when he posts on social media.The injury he picked up in July, it has dragged on for a while. When he is fully training, I will have news.'Player Page \u25b8",
+      "status": "Potential Return01/01/2026"
+    }
+  ],
+  "PlayerRadu Dragusin": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 02: 'Kota (Takai) played his first minutes in a Spurs shirt with Radu also stepping up his return to fitness this afternoon. The pair featured in a friendly for our U21s vs Dagenham at Hotspur Way.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerDejan Kulusevski": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailDec 08: 'Yeah, as I said, I will confirm when he's available for the squad. It's part of the recovery. There\u2019s a plan for everything.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerYves Bissouma": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further DetailDec 08: 'It's an internal matter that we're dealing with at the moment, and when we have dealt with that, then I will have a comment on it.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerKota Takai": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailDec 02: 'Kota played his first minutes in a Spurs shirt with Radu Dragusin also stepping up his return to fitness this afternoon. The pair featured in a friendly for our U21s vs Dagenham at Hotspur Way.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerEl Hadji Malick Diouf": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of Nations",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerAaron Wan-Bissaka": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerLukasz Fabianski": [
+    {
+      "player": "ReasonLower Back Injury",
+      "injury": "Further DetailBack InjuryPlayer Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ],
+  "PlayerRodrigo Gomes": [
+    {
+      "player": "ReasonGroin/Hip/Pelvic Injury",
+      "injury": "Further DetailNov 05: 'Surgery went really well. It\u2019s never easy to give accurate timescales at such an early point, but we have a timeframe we're working towards based on the norm for this kind of surgery. We've had a couple of similar surgeries in the last 2-3 years, and it\u2019s normally around the 8-12-week mark.'Player Page \u25b8",
+      "status": "Potential Return21/02/2026"
+    }
+  ],
+  "PlayerJean-Ricner Bellegarde": [
+    {
+      "player": "ReasonThigh Injury",
+      "injury": "Further DetailHamstring StrainPlayer Page \u25b8",
+      "status": "Potential Return31/01/2026"
+    }
+  ],
+  "PlayerMarshall Munetsi": [
+    {
+      "player": "ReasonCalf/Shin/Heel Injury",
+      "injury": "Further DetailDec 08: 'It'll be weeks, I don't know how many at the moment, but I think it's looking like at least six weeks.'Player Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerEmmanuel Djedje Agbadou Badobre": [
+    {
+      "player": "ReasonOther",
+      "injury": "Further DetailAfrican Cup of NationsPlayer Page \u25b8",
+      "status": "Potential Return18/01/2026"
+    }
+  ],
+  "PlayerYerson Mosquera": [
+    {
+      "player": "ReasonSuspended",
+      "injury": "Further Detail5 Yellow CardsPlayer Page \u25b8",
+      "status": "Potential Return27/12/2025"
+    }
+  ],
+  "PlayerDaniel Bentley": [
+    {
+      "player": "ReasonAnkle/Foot Injury",
+      "injury": "Further DetailNov 28: 'A few weeks away...'Player Page \u25b8",
+      "status": "Potential Return20/12/2025"
+    }
+  ],
+  "PlayerLeon Chiwome": [
+    {
+      "player": "ReasonKnee Injury",
+      "injury": "Further DetailJan 23: 'Devastated to say that I've ruptured my ACL, and it will bring my season to an end just after coming back from injury.'Player Page \u25b8",
+      "status": "Potential ReturnNo Return Date"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+prev_margin
+prev_dem_pct
+prev_rep_pct
+historical_avg_margin
+gdp_growth
+unemployment
+inflation
+consumer_confidence
+final_poll_dem
+final_poll_rep
+poll_margin
+poll_volatility

@@ -1,0 +1,162 @@
+[
+  {
+    "home_team": "Newcastle",
+    "away_team": "Chelsea",
+    "date": "2025-12-20",
+    "time": "12:30",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Bournemouth",
+    "away_team": "Burnley",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Brighton",
+    "away_team": "Sunderland AFC",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Man City",
+    "away_team": "West Ham",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Wolves",
+    "away_team": "Brentford",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Tottenham",
+    "away_team": "Liverpool",
+    "date": "2025-12-20",
+    "time": "17:30",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Everton",
+    "away_team": "Arsenal",
+    "date": "2025-12-20",
+    "time": "20:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Leeds",
+    "away_team": "Crystal Palace",
+    "date": "2025-12-20",
+    "time": "20:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Aston Villa",
+    "away_team": "Man United",
+    "date": "2025-12-21",
+    "time": "16:30",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Fulham",
+    "away_team": "Nott'm Forest",
+    "date": "2025-12-22",
+    "time": "20:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Man United",
+    "away_team": "Newcastle",
+    "date": "2025-12-26",
+    "time": "20:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Nott'm Forest",
+    "away_team": "Man City",
+    "date": "2025-12-27",
+    "time": "12:30",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Arsenal",
+    "away_team": "Brighton",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Brentford",
+    "away_team": "Bournemouth",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Burnley",
+    "away_team": "Everton",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Liverpool",
+    "away_team": "Wolves",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "West Ham",
+    "away_team": "Fulham",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Chelsea",
+    "away_team": "Aston Villa",
+    "date": "2025-12-27",
+    "time": "17:30",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Sunderland AFC",
+    "away_team": "Leeds",
+    "date": "2025-12-28",
+    "time": "14:00",
+    "venue": "TBD",
+    "status": "NS"
+  },
+  {
+    "home_team": "Crystal Palace",
+    "away_team": "Tottenham",
+    "date": "2025-12-28",
+    "time": "16:30",
+    "venue": "TBD",
+    "status": "NS"
+  }
+]

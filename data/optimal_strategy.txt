@@ -1,0 +1,10 @@
+OPTIMAL BETTING STRATEGY
+==================================================
+
+kelly_fraction: 0.1
+min_edge: 0.1
+total_trades: 13.0
+roi: 49.479687830104105
+win_rate: 0.6153846153846154
+sharpe_ratio: 8.052797696810655
+max_drawdown: -5.905880984789634

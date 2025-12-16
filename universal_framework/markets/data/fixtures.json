@@ -1,0 +1,107 @@
+[
+  {
+    "home_team": "Man United",
+    "away_team": "Bournemouth",
+    "date": "2025-12-15",
+    "time": "14:00",
+    "venue": "Old Trafford"
+  },
+  {
+    "home_team": "Newcastle",
+    "away_team": "Chelsea",
+    "date": "2025-12-20",
+    "time": "12:30",
+    "venue": "St James' Park"
+  },
+  {
+    "home_team": "Bournemouth",
+    "away_team": "Burnley",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "Vitality Stadium"
+  },
+  {
+    "home_team": "Man United",
+    "away_team": "Newcastle",
+    "date": "2025-12-26",
+    "time": "20:00",
+    "venue": "Old Trafford"
+  },
+  {
+    "home_team": "Brighton",
+    "away_team": "Sunderland",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "Amex Stadium"
+  },
+  {
+    "home_team": "Man City",
+    "away_team": "West Ham",
+    "date": "2025-12-20",
+    "time": "15:00",
+    "venue": "Etihad Stadium"
+  },
+  {
+    "home_team": "Wolves",
+    "away_team": "Brentford",
+    "date": "2025-12-20",
+    "time": "17:30",
+    "venue": "Molineux Stadium"
+  },
+  {
+    "home_team": "Nott'm Forest",
+    "away_team": "Man City",
+    "date": "2025-12-27",
+    "time": "12:30",
+    "venue": "The City Ground"
+  },
+  {
+    "home_team": "Spurs",
+    "away_team": "Liverpool",
+    "date": "2025-12-20",
+    "time": "17:30",
+    "venue": "Tottenham Hotspur Stadium"
+  },
+  {
+    "home_team": "Brighton",
+    "away_team": "Brentford",
+    "date": "2025-12-27",
+    "time": "19:30",
+    "venue": "Amex Stadium"
+  },
+  {
+    "home_team": "Everton",
+    "away_team": "Arsenal",
+    "date": "2025-12-20",
+    "time": "20:00",
+    "venue": "Goodison Park"
+  },
+  {
+    "home_team": "Leeds",
+    "away_team": "Crystal Palace",
+    "date": "2025-12-20",
+    "time": "20:00",
+    "venue": "Elland Road"
+  },
+  {
+    "home_team": "Arsenal",
+    "away_team": "Brighton",
+    "date": "2025-12-27",
+    "time": "15:00",
+    "venue": "Emirates Stadium"
+  },
+  {
+    "home_team": "Aston Villa",
+    "away_team": "Man United",
+    "date": "2025-12-21",
+    "time": "16:30",
+    "venue": "Villa Park"
+  },
+  {
+    "home_team": "Fulham",
+    "away_team": "Nott'm Forest",
+    "date": "2025-12-22",
+    "time": "20:00",
+    "venue": "Craven Cottage"
+  }
+]
