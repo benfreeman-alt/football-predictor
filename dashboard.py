@@ -319,7 +319,7 @@ elif selected_market == "⚽ Football":
                             st.error(f"Error generating prediction: {e}")
         
         # Betting Strategy Explanation
-        with st.expander("💡 Betting Strategy: Model + Positive EV")
+        with st.expander("💡 Betting Strategy: Model + Positive EV"):
             st.markdown("""
             **Our Strategy: Only bet when BOTH conditions are met**
             
