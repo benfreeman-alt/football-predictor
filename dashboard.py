@@ -759,9 +759,7 @@ elif selected_market == "📈 Bet Tracking":
             odds = st.number_input("Odds", min_value=1.01, max_value=100.0, value=2.0, step=0.01)
         
         with col2:
-            stake = st.number_input("Stake (£)", min_value=0.01, max_value=10000.0, value=10.0, step=0.50)
-            
-            # Bankroll calculator
+            # Bankroll calculator (outside of main stake input)
             with st.expander("💰 Calculate Stake from Bankroll"):
                 bankroll = st.number_input(
                     "Your Bankroll (£)",
@@ -769,7 +767,8 @@ elif selected_market == "📈 Bet Tracking":
                     max_value=1000000.0,
                     value=1000.0,
                     step=50.0,
-                    help="Total betting bankroll"
+                    help="Total betting bankroll",
+                    key="bet_tracking_bankroll"
                 )
                 stake_pct = st.slider(
                     "Stake %",
@@ -781,11 +780,9 @@ elif selected_market == "📈 Bet Tracking":
                 )
                 calculated_stake = bankroll * (stake_pct / 100)
                 st.info(f"**Recommended Stake:** £{calculated_stake:.2f}")
-                
-                if st.button("Use This Stake"):
-                    stake = calculated_stake
-                    st.success(f"Stake set to £{stake:.2f}")
+                st.caption("Copy this value to the Stake field above")
             
+            stake = st.number_input("Stake (£)", min_value=0.01, max_value=10000.0, value=10.0, step=0.50)
             bet_date = st.date_input("Match Date")
             result = st.selectbox("Result (if known)", ["Pending", "Won", "Lost", "Push"])
         
