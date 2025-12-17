@@ -634,6 +634,119 @@ elif selected_market == "⚽ Football":
                                     st.warning("⚠️ These odds show +EV, but consider if they match what model predicts")
                                 else:
                                     st.warning("⚠️ At these odds: No positive EV - wait for better odds")
+                                
+                                # LAY BETTING CALCULATOR
+                                st.markdown("---")
+                                st.markdown("**💱 Lay Betting Calculator (Betfair Exchange)**")
+                                st.caption("Compare traditional betting vs laying on an exchange")
+                                
+                                lay_col1, lay_col2 = st.columns(2)
+                                
+                                with lay_col1:
+                                    st.markdown("**Traditional Bet:**")
+                                    trad_stake_input = st.number_input(
+                                        "Stake (£)",
+                                        min_value=1.0,
+                                        max_value=10000.0,
+                                        value=float(st.session_state.bankroll * 0.01),  # 1% of bankroll
+                                        step=5.0,
+                                        key=f"lay_trad_stake_{pred['event']}"
+                                    )
+                                    trad_odds_input = st.number_input(
+                                        "Double Chance Odds",
+                                        min_value=1.01,
+                                        max_value=10.0,
+                                        value=custom_dc_away_draw if custom_away_draw_ev > 0 else 1.50,
+                                        step=0.01,
+                                        key=f"lay_trad_odds_{pred['event']}"
+                                    )
+                                
+                                with lay_col2:
+                                    st.markdown("**Lay Bet (Exchange):**")
+                                    lay_odds_input = st.number_input(
+                                        "Lay Odds (e.g., Man United)",
+                                        min_value=1.01,
+                                        max_value=100.0,
+                                        value=custom_home_odds if custom_home_odds > 0 else 2.00,
+                                        step=0.01,
+                                        key=f"lay_odds_{pred['event']}"
+                                    )
+                                    commission_input = st.number_input(
+                                        "Commission %",
+                                        min_value=0.0,
+                                        max_value=10.0,
+                                        value=2.0,
+                                        step=0.5,
+                                        key=f"lay_commission_{pred['event']}"
+                                    )
+                                
+                                # Calculate
+                                try:
+                                    import sys
+                                    sys.path.insert(0, 'universal_framework/markets')
+                                    from lay_calculator import LayCalculator
+                                    
+                                    calc = LayCalculator(commission_rate=commission_input/100)
+                                    comparison = calc.compare_bets(
+                                        traditional_stake=trad_stake_input,
+                                        traditional_odds=trad_odds_input,
+                                        lay_odds=lay_odds_input
+                                    )
+                                    
+                                    # Display results
+                                    st.markdown("**📊 Comparison Results:**")
+                                    
+                                    result_col1, result_col2, result_col3 = st.columns(3)
+                                    
+                                    with result_col1:
+                                        st.metric(
+                                            "Traditional Bet",
+                                            f"£{comparison['traditional']['stake']:.2f}",
+                                            f"+£{comparison['traditional']['profit']:.2f}"
+                                        )
+                                        st.caption(f"Risk: £{comparison['traditional']['risk']:.2f}")
+                                        st.caption(f"ROI: {comparison['traditional']['roi']:.1f}%")
+                                    
+                                    with result_col2:
+                                        st.metric(
+                                            "Lay Bet",
+                                            f"£{comparison['lay']['backers_stake']:.2f}",
+                                            f"+£{comparison['lay']['profit']:.2f}"
+                                        )
+                                        st.caption(f"Liability: £{comparison['lay']['liability']:.2f}")
+                                        st.caption(f"ROI: {comparison['lay']['roi']:.1f}%")
+                                    
+                                    with result_col3:
+                                        better = comparison['comparison']['better_option']
+                                        diff = comparison['comparison']['profit_difference']
+                                        pct = comparison['comparison']['percentage_better']
+                                        
+                                        if better == "LAY":
+                                            st.success(f"**LAY is better!**")
+                                            st.metric("Extra Profit", f"+£{diff:.2f}", f"+{pct:.1f}%")
+                                        else:
+                                            st.warning(f"**Traditional better**")
+                                            st.metric("Difference", f"£{abs(diff):.2f}", f"{pct:.1f}%")
+                                    
+                                    # Key info box
+                                    if better == "LAY":
+                                        st.success(f"""
+                                        ✅ **Recommendation: LAY on Betfair**
+                                        
+                                        - Lay stake: **£{comparison['lay']['backers_stake']:.2f}** at {lay_odds_input:.2f}
+                                        - Your liability: **£{comparison['lay']['liability']:.2f}**
+                                        - Profit if win: **£{comparison['lay']['profit']:.2f}** (after {commission_input}% commission)
+                                        - Extra profit vs traditional: **£{diff:.2f}** ({pct:.1f}% more)
+                                        """)
+                                    else:
+                                        st.info(f"""
+                                        💡 **Stick with traditional bet**
+                                        
+                                        Traditional betting offers better value at these odds.
+                                        """)
+                                
+                                except Exception as e:
+                                    st.error(f"Lay calculator error: {e}")
                             
                             else:
                                 st.warning("❌ No positive value found")
