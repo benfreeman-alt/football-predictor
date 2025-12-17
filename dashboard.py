@@ -528,7 +528,18 @@ elif selected_market == "⚽ Football":
                                     stake_pct = recommendation['stake_recommendation']
                                     stake_amount = st.session_state.bankroll * (stake_pct / 100)
                                     
+                                    # Enforce £5 minimum for Betfair compatibility
+                                    if stake_amount < 5.0:
+                                        original_stake = stake_amount
+                                        stake_amount = 5.0
+                                        show_minimum_warning = True
+                                    else:
+                                        show_minimum_warning = False
+                                    
                                     st.write(f"**Stake:** {stake_pct:.1f}% (£{stake_amount:.2f})")
+                                    
+                                    if show_minimum_warning:
+                                        st.caption(f"⚠️ Increased from £{original_stake:.2f} to meet Betfair £5 minimum")
                                     
                                     # Show potential profit
                                     potential_profit = stake_amount * (recommendation['odds'] - 1)
