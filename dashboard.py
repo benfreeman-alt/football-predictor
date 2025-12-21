@@ -823,18 +823,19 @@ elif selected_market == "📈 Bet Tracking":
     st.header("📈 Bet Tracking & Performance")
     st.markdown("**Track your bets and monitor ROI**")
     
-    # Initialize bet tracker
-    if 'bet_tracker' not in st.session_state:
-        try:
-            import sys
-            sys.path.insert(0, 'universal_framework/markets')
-            from bet_tracker import BetTracker
-            st.session_state.bet_tracker = BetTracker(data_file='data/bet_tracking.json')
-        except Exception as e:
-            st.error(f"Error loading bet tracker: {e}")
-            st.stop()
+    st.info("💾 Your bet data is saved to `data/bet_tracking.json` and persists across sessions. Clearing Streamlit cache won't delete your bets!")
     
-    tracker = st.session_state.bet_tracker
+    # Initialize bet tracker - ALWAYS reload from file (don't cache in session_state)
+    try:
+        import sys
+        sys.path.insert(0, 'universal_framework/markets')
+        from bet_tracker import BetTracker
+        
+        # Create new instance each time - it loads from file
+        tracker = BetTracker(data_file='data/bet_tracking.json')
+    except Exception as e:
+        st.error(f"Error loading bet tracker: {e}")
+        st.stop()
     
     # Performance Stats
     st.markdown("---")
