@@ -451,16 +451,18 @@ elif selected_market == "⚽ Football":
             filtered_predictions = []
             for pred in predictions:
                 
-                # Date range filter
+                # Date range filter (only if prediction has a date)
                 pred_date_str = pred.get('date', '')
-                if pred_date_str:
+                if pred_date_str:  # Only filter if date exists
                     try:
                         pred_date = datetime.strptime(pred_date_str, '%Y-%m-%d').date()
                         # Filter by date range
                         if pred_date < start_date or pred_date > end_date:
-                            continue
-                    except:
-                        pass  # If date parsing fails, include the match
+                            continue  # Skip this prediction
+                    except Exception as e:
+                        # If date parsing fails, include the match anyway
+                        pass
+                # If no date, include the match (don't filter it out)
                 
                 # Confidence filter
                 if pred['confidence'] not in confidence_filter:
@@ -485,6 +487,14 @@ elif selected_market == "⚽ Football":
             
             # Show count
             st.info(f"📊 Showing {len(filtered_predictions)} of {len(predictions)} matches")
+            
+            # Debug: Show date filter info
+            if len(filtered_predictions) == 0 and len(predictions) > 0:
+                st.warning(f"⚠️ All {len(predictions)} matches filtered out. Check date range: {start_date} to {end_date}")
+                with st.expander("🔍 Debug Info"):
+                    for pred in predictions[:3]:
+                        pred_date_str = pred.get('date', 'NO DATE')
+                        st.write(f"Match: {pred.get('event', 'Unknown')} - Date: {pred_date_str}")
             
             # Display predictions
             for idx, pred in enumerate(filtered_predictions):
