@@ -433,15 +433,15 @@ elif selected_market == "⚽ Football":
                 st.markdown(f"### 📅 {date_display}")
                 
                 for idx, pred in enumerate(by_date[match_date]):
-                
-                # Get value analysis if available
-                value_analysis = pred.get('value_analysis')
-                recommendation = value_analysis['recommendation'] if value_analysis else None
-                
-                # NEW LOGIC: Determine if this is a REAL bet (Model + EV)
-                is_value_bet = False
-                if recommendation and recommendation['action'] == 'BET':
-                    is_value_bet = True
+                    
+                    # Get value analysis if available
+                    value_analysis = pred.get('value_analysis')
+                    recommendation = value_analysis['recommendation'] if value_analysis else None
+                    
+                    # NEW LOGIC: Determine if this is a REAL bet (Model + EV)
+                    is_value_bet = False
+                    if recommendation and recommendation['action'] == 'BET':
+                        is_value_bet = True
                 
                 # Determine color and display based on Model + EV strategy
                 if is_value_bet:
