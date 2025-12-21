@@ -1017,19 +1017,19 @@ elif selected_market == "📈 Bet Tracking":
                 with col3:
                     # Update result button
                     if bet['status'] == "Pending":
-                        with st.popover("Update"):
+                        with st.popover("Update", key=f"popover_{idx}"):
                             new_result = st.radio(
                                 "Result",
                                 ["Won", "Lost", "Push"],
-                                key=f"result_{bet['id']}"
+                                key=f"result_{idx}_{bet['id']}"
                             )
-                            if st.button("Save", key=f"save_{bet['id']}"):
+                            if st.button("Save", key=f"save_{idx}_{bet['id']}"):
                                 tracker.update_bet_result(bet['id'], new_result)
                                 st.success("Updated!")
                                 st.rerun()
                     
                     # Delete button
-                    if st.button("🗑️", key=f"delete_{bet['id']}", help="Delete bet"):
+                    if st.button("🗑️", key=f"delete_{idx}_{bet['id']}", help="Delete bet"):
                         tracker.delete_bet(bet['id'])
                         st.rerun()
                 
