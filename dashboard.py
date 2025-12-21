@@ -878,8 +878,6 @@ elif selected_market == "📈 Bet Tracking":
                 "BACK (Normal bet)",
                 "LAY (Betfair Exchange)"
             ])
-            # Extract just BACK or LAY
-            bet_direction_value = "LAY" if "LAY" in bet_direction else "BACK"
             
             bet_type = st.selectbox("Bet Type", [
                 "Home Win",
@@ -894,8 +892,12 @@ elif selected_market == "📈 Bet Tracking":
                 "Other"
             ])
             odds = st.number_input("Odds", min_value=1.01, max_value=100.0, value=2.0, step=0.01)
-            
-            # Show help text for lay bets
+        
+        # Extract bet direction value outside col blocks
+        bet_direction_value = "LAY" if "LAY" in bet_direction else "BACK"
+        
+        # Show help text in col1
+        with col1:
             if bet_direction_value == "LAY":
                 st.caption("💡 For LAY bets: Enter backer's stake (not your liability)")
         
