@@ -118,16 +118,22 @@ class ValueCalculator:
                 'rating': '❌'
             }
         
-        # Calculate stake (Kelly Criterion simplified)
-        # IMPORTANT: Minimums set for Betfair Exchange compatibility
+        # Calculate stake (Kelly Criterion)
+        # Calculate raw Kelly percentage first
         if confidence == 'HIGH':
-            stake_pct = min(3.0, max(1.0, best_ev * 0.25))  # 1-3% for high confidence
+            raw_stake_pct = min(2.5, best_ev * 0.30)  # Up to 2.5%
         elif confidence == 'MEDIUM-HIGH':
-            stake_pct = min(2.0, max(1.0, best_ev * 0.20))  # 1-2%
+            raw_stake_pct = min(2.0, best_ev * 0.25)  # Up to 2%
         elif confidence == 'MEDIUM':
-            stake_pct = min(1.5, max(1.0, best_ev * 0.15))  # 1-1.5%
+            raw_stake_pct = min(1.5, best_ev * 0.20)  # Up to 1.5%
         else:
-            stake_pct = 1.0  # Minimum 1%
+            raw_stake_pct = best_ev * 0.15  # Scale with EV
+        
+        # Ensure minimum 0.3% for differentiation
+        stake_pct = max(0.3, raw_stake_pct)
+        
+        # Note: Display layer will handle Betfair minimum scaling
+        # This preserves the proportional relationships between bets
         
         # Rating
         if best_ev > 0.20 and confidence == 'HIGH':
