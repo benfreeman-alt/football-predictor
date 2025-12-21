@@ -2,10 +2,7 @@ name: Weekly Model Auto-Update
 
 on:
   schedule:
-    # Run every Sunday at 23:00 UTC (after matches finish)
     - cron: '0 23 * * 0'
-  
-  # Allow manual triggering
   workflow_dispatch:
 
 jobs:
