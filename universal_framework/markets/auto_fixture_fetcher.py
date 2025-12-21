@@ -103,21 +103,28 @@ class AutoFixtureFetcher:
                         match_date_str = match.get('utcDate', '')
                         match_date = datetime.fromisoformat(match_date_str.replace('Z', '+00:00'))
                         
-                        # Only include matches in next 14 days
-                        if today <= match_date <= cutoff:
+                        # Only include FUTURE matches in next 14 days
+                        if match_date >= today and match_date <= cutoff:
                             fixtures.append({
                                 'home_team': self._clean_team_name(match['homeTeam']['name']),
                                 'away_team': self._clean_team_name(match['awayTeam']['name']),
                                 'date': match_date.strftime('%Y-%m-%d'),
                                 'time': match_date.strftime('%H:%M'),
                                 'venue': match.get('venue', 'TBD'),
-                                'status': 'NS'
+                                'status': 'NS',
+                                'datetime': match_date  # Keep for sorting
                             })
                     except Exception as e:
                         print(f"   ⚠️  Error parsing match: {e}")
                         continue
                 
                 if fixtures:
+                    # Sort by date/time
+                    fixtures.sort(key=lambda x: x.get('datetime', datetime.max))
+                    # Remove datetime field (not needed in final output)
+                    for f in fixtures:
+                        f.pop('datetime', None)
+                    
                     print(f"   ✅ Retrieved {len(fixtures)} fixtures from football-data.org")
                     return fixtures
                 else:

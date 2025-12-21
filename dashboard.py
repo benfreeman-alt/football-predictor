@@ -409,7 +409,30 @@ elif selected_market == "⚽ Football":
             # Show count
             st.info(f"📊 Showing {len(filtered_predictions)} of {len(predictions)} matches")
             
-            for idx, pred in enumerate(filtered_predictions):
+            # Group by date
+            from collections import defaultdict
+            by_date = defaultdict(list)
+            for pred in filtered_predictions:
+                # Extract date from fixture
+                match_date = pred.get('date', 'Unknown')
+                by_date[match_date].append(pred)
+            
+            # Sort dates
+            sorted_dates = sorted(by_date.keys())
+            
+            # Display by date
+            for match_date in sorted_dates:
+                # Date header
+                try:
+                    from datetime import datetime
+                    date_obj = datetime.strptime(match_date, '%Y-%m-%d')
+                    date_display = date_obj.strftime('%A, %d %B %Y')
+                except:
+                    date_display = match_date
+                
+                st.markdown(f"### 📅 {date_display}")
+                
+                for idx, pred in enumerate(by_date[match_date]):
                 
                 # Get value analysis if available
                 value_analysis = pred.get('value_analysis')
