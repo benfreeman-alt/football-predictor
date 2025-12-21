@@ -201,6 +201,56 @@ elif selected_market == "⚽ Football":
             except Exception as e:
                 st.error(f"Error: {e}")
     
+    st.markdown("---")
+    
+    # Date Range Filter
+    st.subheader("📅 Fixture Date Filter")
+    
+    filter_col1, filter_col2, filter_col3 = st.columns(3)
+    
+    from datetime import datetime, timedelta
+    
+    with filter_col1:
+        today = datetime.now().date()
+        
+        start_date = st.date_input(
+            "Show fixtures from:",
+            value=today,
+            min_value=today - timedelta(days=7),  # Allow looking back 7 days
+            help="Only show matches from this date onwards"
+        )
+    
+    with filter_col2:
+        default_end = today + timedelta(days=14)
+        end_date = st.date_input(
+            "Show fixtures until:",
+            value=default_end,
+            min_value=today,
+            help="Only show matches up to this date"
+        )
+    
+    with filter_col3:
+        st.markdown("**Quick Filters:**")
+        quick_col1, quick_col2 = st.columns(2)
+        with quick_col1:
+            if st.button("This Week", help="Next 7 days", key="week_filter"):
+                st.session_state.start_date = today
+                st.session_state.end_date = today + timedelta(days=7)
+                st.rerun()
+        with quick_col2:
+            if st.button("Next 2 Weeks", help="Next 14 days", key="fortnight_filter"):
+                st.session_state.start_date = today
+                st.session_state.end_date = today + timedelta(days=14)
+                st.rerun()
+    
+    # Apply session state if exists
+    if 'start_date' in st.session_state:
+        start_date = st.session_state.start_date
+    if 'end_date' in st.session_state:
+        end_date = st.session_state.end_date
+    
+    st.markdown("---")
+    
     # Load football market
     if not st.session_state.football_loaded:
         with st.spinner("🔄 Loading football predictor... This may take a minute..."):
@@ -400,6 +450,17 @@ elif selected_market == "⚽ Football":
             # Apply filters
             filtered_predictions = []
             for pred in predictions:
+                
+                # Date range filter
+                pred_date_str = pred.get('date', '')
+                if pred_date_str:
+                    try:
+                        pred_date = datetime.strptime(pred_date_str, '%Y-%m-%d').date()
+                        # Filter by date range
+                        if pred_date < start_date or pred_date > end_date:
+                            continue
+                    except:
+                        pass  # If date parsing fails, include the match
                 
                 # Confidence filter
                 if pred['confidence'] not in confidence_filter:
