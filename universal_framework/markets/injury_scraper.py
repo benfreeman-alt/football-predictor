@@ -1,327 +1,281 @@
 """
-INJURY DATA SCRAPER
+PREMIER LEAGUE INJURY SCRAPER
 
-Scrapes injury data from Premier Injuries
-Tracks key player absences
+Scrapes current injury data from Premier Injuries
+Updates every 24 hours
 """
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
+import requests
 from bs4 import BeautifulSoup
-import pandas as pd
-import time
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class InjuryScraper:
-    """Scrape injury data from Premier Injuries"""
+    """Scrape Premier League injury data"""
     
     def __init__(self, cache_dir='data/injury_cache'):
-        self.injury_data = {}
-        self.driver = None
         self.cache_dir = cache_dir
         os.makedirs(cache_dir, exist_ok=True)
+        
+        # Team name mappings
+        self.team_map = {
+            'Arsenal': 'Arsenal',
+            'Aston Villa': 'Aston Villa',
+            'Bournemouth': 'Bournemouth',
+            'AFC Bournemouth': 'Bournemouth',
+            'Brentford': 'Brentford',
+            'Brighton': 'Brighton',
+            'Brighton & Hove Albion': 'Brighton',
+            'Brighton and Hove Albion': 'Brighton',
+            'Chelsea': 'Chelsea',
+            'Crystal Palace': 'Crystal Palace',
+            'Everton': 'Everton',
+            'Fulham': 'Fulham',
+            'Ipswich': 'Ipswich',
+            'Ipswich Town': 'Ipswich',
+            'Leicester': 'Leicester',
+            'Leicester City': 'Leicester',
+            'Liverpool': 'Liverpool',
+            'Manchester City': 'Man City',
+            'Man City': 'Man City',
+            'Manchester United': 'Man United',
+            'Man United': 'Man United',
+            'Man Utd': 'Man United',
+            'Newcastle': 'Newcastle',
+            'Newcastle United': 'Newcastle',
+            'Nottingham Forest': "Nott'm Forest",
+            "Nott'm Forest": "Nott'm Forest",
+            'Southampton': 'Southampton',
+            'Tottenham': 'Tottenham',
+            'Tottenham Hotspur': 'Tottenham',
+            'West Ham': 'West Ham',
+            'West Ham United': 'West Ham',
+            'Wolves': 'Wolves',
+            'Wolverhampton Wanderers': 'Wolves',
+            'Wolverhampton': 'Wolves'
+        }
     
-    def init_driver(self, headless=True):
-        """Initialize Firefox"""
+    def get_team_injuries(self, team_name):
+        """
+        Get current injuries for a team
         
-        print("\n🦊 Initializing Firefox for injury scraping...")
+        Args:
+            team_name: Team name (e.g., 'Man United')
         
-        try:
-            firefox_options = Options()
-            if headless:
-                firefox_options.add_argument('--headless')
-            
-            try:
-                from webdriver_manager.firefox import GeckoDriverManager
-                service = Service(GeckoDriverManager().install())
-                self.driver = webdriver.Firefox(service=service, options=firefox_options)
-                print("   ✅ Firefox initialized")
-            except ImportError:
-                self.driver = webdriver.Firefox(options=firefox_options)
-                print("   ✅ Firefox initialized")
-            
-            return True
+        Returns:
+            dict with injury data or None
+        """
         
-        except Exception as e:
-            print(f"   ❌ Could not initialize: {e}")
-            return False
-    
-    def scrape_premier_league_injuries(self):
-        """Scrape current Premier League injuries"""
-        
-        print("\n🏥 Scraping Premier League injury data...")
+        # Normalize team name
+        team_name = self.team_map.get(team_name, team_name)
         
         # Check cache first (valid for 24 hours)
-        cached = self.load_from_cache()
+        cached = self._load_from_cache(team_name)
         if cached:
             return cached
         
-        if not self.driver:
-            if not self.init_driver():
-                return self._get_default_injuries()
+        # Fetch fresh data
+        injuries = self._scrape_team_injuries(team_name)
+        
+        if injuries:
+            self._save_to_cache(team_name, injuries)
+        
+        return injuries
+    
+    def _scrape_team_injuries(self, team_name):
+        """Scrape injuries from Premier Injuries website"""
         
         try:
+            print(f"   Fetching injuries for {team_name}...")
+            
+            # Premier Injuries URL (free, no API key needed)
+            # Format: premierinjuries.com/injury-table.php
             url = "https://www.premierinjuries.com/injury-table.php"
-            print(f"   Loading {url}...")
             
-            self.driver.get(url)
-            time.sleep(3)
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            }
             
-            # Get page source
-            page_source = self.driver.page_source
-            soup = BeautifulSoup(page_source, 'html.parser')
+            response = requests.get(url, headers=headers, timeout=10)
             
-            # Find injury table
-            injury_data = {}
+            if response.status_code != 200:
+                print(f"   ⚠️  Failed to fetch injuries (status {response.status_code})")
+                return self._get_fallback_injuries(team_name)
             
-            # Look for team sections
-            teams = soup.find_all('div', class_='team-injuries')
+            soup = BeautifulSoup(response.content, 'html.parser')
             
-            if not teams:
-                # Try alternative parsing
-                print("   Trying alternative parsing method...")
-                injury_data = self._parse_alternative(soup)
-            else:
-                for team_section in teams:
-                    try:
-                        team_name = team_section.find('h3').text.strip()
-                        team_name = self.clean_team_name(team_name)
-                        
-                        injuries = []
-                        injury_rows = team_section.find_all('tr')
-                        
-                        for row in injury_rows[1:]:  # Skip header
-                            cols = row.find_all('td')
-                            if len(cols) >= 3:
-                                player = cols[0].text.strip()
-                                injury_type = cols[1].text.strip()
-                                status = cols[2].text.strip()
-                                
-                                injuries.append({
-                                    'player': player,
-                                    'injury': injury_type,
-                                    'status': status
-                                })
-                        
-                        injury_data[team_name] = injuries
+            # Find table with injuries
+            injuries = []
+            
+            # Look for team section
+            team_found = False
+            for row in soup.find_all('tr'):
+                cells = row.find_all('td')
+                
+                if not cells:
+                    continue
+                
+                # Check if this row mentions the team
+                row_text = row.get_text()
+                
+                if team_name.lower() in row_text.lower():
+                    team_found = True
                     
-                    except Exception as e:
+                    # Try to extract player name, injury type, and return date
+                    try:
+                        player_name = cells[1].get_text(strip=True) if len(cells) > 1 else "Unknown"
+                        injury_type = cells[2].get_text(strip=True) if len(cells) > 2 else "Unknown"
+                        return_date = cells[3].get_text(strip=True) if len(cells) > 3 else "Unknown"
+                        
+                        if player_name and player_name != "Unknown":
+                            injuries.append({
+                                'player': player_name,
+                                'injury': injury_type,
+                                'return_date': return_date,
+                                'status': 'Out'
+                            })
+                    except:
                         continue
             
-            if injury_data:
-                self.injury_data = injury_data
-                self.save_to_cache(injury_data)
-                print(f"\n   ✅ Retrieved injury data for {len(injury_data)} teams")
-                return injury_data
+            if injuries:
+                print(f"   ✅ Found {len(injuries)} injuries for {team_name}")
+                return {
+                    'team': team_name,
+                    'injuries': injuries,
+                    'last_updated': datetime.now().isoformat(),
+                    'source': 'Premier Injuries'
+                }
             else:
-                print("   ⚠️  No injury data found, using defaults")
-                return self._get_default_injuries()
+                print(f"   ℹ️  No injuries found for {team_name}")
+                return {
+                    'team': team_name,
+                    'injuries': [],
+                    'last_updated': datetime.now().isoformat(),
+                    'source': 'Premier Injuries'
+                }
         
         except Exception as e:
             print(f"   ❌ Error scraping injuries: {e}")
-            return self._get_default_injuries()
-        
-        finally:
-            if self.driver:
-                try:
-                    self.driver.quit()
-                    print("   🔒 Browser closed")
-                except:
-                    pass
-            self.driver = None
+            return self._get_fallback_injuries(team_name)
     
-    def _parse_alternative(self, soup):
-        """Alternative parsing method"""
+    def _get_fallback_injuries(self, team_name):
+        """
+        Return known injuries when scraping fails
         
-        injury_data = {}
+        This is manually updated with major injuries
+        """
         
-        try:
-            # Try to find all tables
-            tables = soup.find_all('table')
-            
-            for table in tables:
-                rows = table.find_all('tr')
-                
-                for row in rows:
-                    cols = row.find_all('td')
-                    
-                    if len(cols) >= 4:
-                        try:
-                            team_name = cols[0].text.strip()
-                            player = cols[1].text.strip()
-                            injury = cols[2].text.strip()
-                            status = cols[3].text.strip()
-                            
-                            team_name = self.clean_team_name(team_name)
-                            
-                            if team_name not in injury_data:
-                                injury_data[team_name] = []
-                            
-                            injury_data[team_name].append({
-                                'player': player,
-                                'injury': injury,
-                                'status': status
-                            })
-                        
-                        except:
-                            continue
-        
-        except Exception as e:
-            pass
-        
-        return injury_data
-    
-    def _get_default_injuries(self):
-        """Return default (no injuries) for all teams"""
-        
-        print("\n   📊 Using default injury data (no injuries)")
-        
-        teams = [
-            'Arsenal', 'Aston Villa', 'Bournemouth', 'Brentford', 'Brighton',
-            'Chelsea', 'Crystal Palace', 'Everton', 'Fulham', 'Ipswich',
-            'Leicester', 'Liverpool', 'Man City', 'Man United', 'Newcastle',
-            "Nott'm Forest", 'Southampton', 'Tottenham', 'West Ham', 'Wolves'
-        ]
-        
-        return {team: [] for team in teams}
-    
-    def clean_team_name(self, name):
-        """Standardize team names"""
-        
-        name_map = {
-            'Manchester United': 'Man United',
-            'Manchester City': 'Man City',
-            'Tottenham Hotspur': 'Tottenham',
-            'Newcastle United': 'Newcastle',
-            'West Ham United': 'West Ham',
-            'Leicester City': 'Leicester',
-            'Brighton & Hove Albion': 'Brighton',
-            'Brighton and Hove Albion': 'Brighton',
-            'Wolverhampton Wanderers': 'Wolves',
-            'Nottingham Forest': "Nott'm Forest",
-            'AFC Bournemouth': 'Bournemouth',
-            'Ipswich Town': 'Ipswich',
+        known_injuries = {
+            'Everton': {
+                'team': 'Everton',
+                'injuries': [
+                    {'player': 'Kieran Dowell', 'injury': 'Knee', 'return_date': 'January 2025', 'status': 'Out'},
+                    {'player': 'Youssef Chermiti', 'injury': 'Ankle', 'return_date': 'Late December', 'status': 'Out'},
+                    {'player': 'Tim Iroegbunam', 'injury': 'Foot', 'return_date': 'January 2025', 'status': 'Out'}
+                ],
+                'last_updated': datetime.now().isoformat(),
+                'source': 'Fallback'
+            },
+            'Man City': {
+                'team': 'Man City',
+                'injuries': [
+                    {'player': 'Rodri', 'injury': 'ACL', 'return_date': 'End of season', 'status': 'Out'},
+                    {'player': 'Oscar Bobb', 'injury': 'Leg', 'return_date': 'Early 2025', 'status': 'Out'}
+                ],
+                'last_updated': datetime.now().isoformat(),
+                'source': 'Fallback'
+            },
+            # Add more teams as needed
         }
         
-        return name_map.get(name, name)
+        return known_injuries.get(team_name, {
+            'team': team_name,
+            'injuries': [],
+            'last_updated': datetime.now().isoformat(),
+            'source': 'Fallback'
+        })
     
-    def get_injury_impact(self, team_name):
-        """
-        Calculate injury impact score
+    def _load_from_cache(self, team_name):
+        """Load injuries from cache if recent (< 24 hours)"""
         
-        Returns:
-            impact_score: 0.0 (no impact) to 1.0 (severe impact)
-        """
-        
-        if team_name not in self.injury_data:
-            return 0.0
-        
-        injuries = self.injury_data[team_name]
-        
-        if not injuries:
-            return 0.0
-        
-        # Weight by severity keywords
-        total_impact = 0
-        
-        for injury in injuries:
-            status = injury.get('status', '').lower()
-            injury_type = injury.get('injury', '').lower()
-            
-            # Severity scoring
-            if 'doubt' in status or 'late test' in status:
-                impact = 0.3
-            elif 'out' in status or 'injured' in status:
-                impact = 0.5
-            elif 'long' in status or 'season' in status:
-                impact = 0.7
-            else:
-                impact = 0.2
-            
-            # Boost for key positions (rough heuristic)
-            if any(word in injury_type.lower() for word in ['hamstring', 'knee', 'acl']):
-                impact *= 1.2
-            
-            total_impact += impact
-        
-        # Cap at 1.0
-        return min(total_impact / 5, 1.0)  # Normalize by expected max of 5 injuries
-    
-    def get_injury_count(self, team_name):
-        """Get number of injuries for a team"""
-        
-        if team_name not in self.injury_data:
-            return 0
-        
-        return len(self.injury_data[team_name])
-    
-    def load_from_cache(self):
-        """Load cached injury data (valid for 24 hours)"""
-        
-        cache_file = os.path.join(self.cache_dir, 'current_injuries.json')
+        cache_file = os.path.join(self.cache_dir, f"{team_name.replace(' ', '_')}.json")
         
         if not os.path.exists(cache_file):
             return None
         
-        # Check if cache is fresh (< 24 hours old)
-        file_time = os.path.getmtime(cache_file)
-        age = time.time() - file_time
+        try:
+            with open(cache_file, 'r') as f:
+                data = json.load(f)
+            
+            # Check if cache is fresh (< 24 hours)
+            last_updated = datetime.fromisoformat(data['last_updated'])
+            age = datetime.now() - last_updated
+            
+            if age < timedelta(hours=24):
+                print(f"   📂 Using cached injuries for {team_name}")
+                return data
+            else:
+                print(f"   ⏰ Cache expired for {team_name} (age: {age.total_seconds()/3600:.1f}h)")
+                return None
         
-        if age > 86400:  # 24 hours in seconds
+        except Exception as e:
+            print(f"   ⚠️  Error loading cache: {e}")
             return None
-        
-        print("   📂 Loading injury data from cache...")
-        
-        with open(cache_file, 'r') as f:
-            data = json.load(f)
-        
-        self.injury_data = data
-        return data
     
-    def save_to_cache(self, data):
+    def _save_to_cache(self, team_name, data):
         """Save injury data to cache"""
         
-        cache_file = os.path.join(self.cache_dir, 'current_injuries.json')
+        cache_file = os.path.join(self.cache_dir, f"{team_name.replace(' ', '_')}.json")
         
-        with open(cache_file, 'w') as f:
-            json.dump(data, f, indent=2)
+        try:
+            with open(cache_file, 'w') as f:
+                json.dump(data, f, indent=2)
+            print(f"   💾 Cached injuries for {team_name}")
+        except Exception as e:
+            print(f"   ⚠️  Error saving cache: {e}")
+    
+    def calculate_injury_impact(self, team_name):
+        """
+        Calculate injury impact on team performance
         
-        print(f"   💾 Cached injury data")
+        Returns:
+            float: Adjustment factor (e.g., -0.05 for 5% weaker)
+        """
+        
+        injuries = self.get_team_injuries(team_name)
+        
+        if not injuries or not injuries.get('injuries'):
+            return 0.0  # No injury impact
+        
+        # Simple scoring: -2% per injured player (max -10%)
+        num_injuries = len(injuries['injuries'])
+        impact = min(num_injuries * -0.02, -0.10)
+        
+        return impact
 
 # Testing
 if __name__ == "__main__":
     scraper = InjuryScraper()
     
-    # Scrape current injuries
-    injuries = scraper.scrape_premier_league_injuries()
-    
-    if injuries:
-        print("\n" + "=" * 70)
-        print("📊 INJURY REPORT")
-        print("=" * 70)
+    # Test with a few teams
+    for team in ['Man United', 'Everton', 'Arsenal']:
+        print(f"\n{'='*60}")
+        print(f"Testing: {team}")
+        print('='*60)
         
-        for team, team_injuries in sorted(injuries.items()):
-            if team_injuries:
-                impact = scraper.get_injury_impact(team)
-                print(f"\n{team}: {len(team_injuries)} injuries (Impact: {impact:.2f})")
-                
-                for injury in team_injuries[:3]:  # Show top 3
-                    print(f"  - {injury.get('player', 'Unknown')}: {injury.get('injury', 'Unknown')} ({injury.get('status', 'Unknown')})")
+        injuries = scraper.get_team_injuries(team)
         
-        # Test impact scores
-        print("\n" + "=" * 70)
-        print("TEAMS MOST AFFECTED BY INJURIES")
-        print("=" * 70)
-        
-        impact_scores = [(team, scraper.get_injury_impact(team)) for team in injuries.keys()]
-        impact_scores.sort(key=lambda x: x[1], reverse=True)
-        
-        for team, impact in impact_scores[:10]:
-            if impact > 0:
-                print(f"{team:20s}: Impact {impact:.2f} ({scraper.get_injury_count(team)} injuries)")
+        if injuries:
+            print(f"\nTeam: {injuries['team']}")
+            print(f"Injuries: {len(injuries['injuries'])}")
+            print(f"Source: {injuries['source']}")
+            print(f"Updated: {injuries['last_updated']}")
+            
+            if injuries['injuries']:
+                print("\nInjured Players:")
+                for inj in injuries['injuries']:
+                    print(f"  - {inj['player']}: {inj['injury']} (Return: {inj['return_date']})")
+            
+            impact = scraper.calculate_injury_impact(team)
+            print(f"\nInjury Impact: {impact:+.1%}")

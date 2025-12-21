@@ -25,6 +25,11 @@ class FootballMarket:
         try:
             from football_predictor_final import FinalFootballPredictor
             from football_data import FootballDataLoader
+            from injury_scraper import InjuryScraper
+            
+            # Initialize injury scraper
+            print("   Initializing injury scraper...")
+            self.injury_scraper = InjuryScraper()
             
             # Load data
             loader = FootballDataLoader()
@@ -40,7 +45,12 @@ class FootballMarket:
             self.predictor = FinalFootballPredictor('Premier League')
             self.predictor.load_data(clean_data)
             self.predictor.load_historical_xg(['2022-2023', '2023-2024', '2024-2025'])
-            self.predictor.load_injuries()
+            
+            # Try to load injuries (may fail, that's OK)
+            try:
+                self.predictor.load_injuries()
+            except Exception as e:
+                print(f"   ⚠️  Could not load injuries from predictor: {e}")
             
             # Train model
             print("\n🧠 Training model...")
@@ -98,6 +108,24 @@ class FootballMarket:
             try:
                 pred = self.predictor.predict_match(home, away, date)
                 
+                # Fetch current injuries if scraper available
+                injury_details = {
+                    'home': {'team': home, 'injuries': []},
+                    'away': {'team': away, 'injuries': []}
+                }
+                
+                if hasattr(self, 'injury_scraper'):
+                    try:
+                        home_injuries = self.injury_scraper.get_team_injuries(home)
+                        away_injuries = self.injury_scraper.get_team_injuries(away)
+                        
+                        if home_injuries and home_injuries.get('injuries'):
+                            injury_details['home'] = home_injuries
+                        if away_injuries and away_injuries.get('injuries'):
+                            injury_details['away'] = away_injuries
+                    except Exception as e:
+                        print(f"   ⚠️  Could not fetch injuries: {e}")
+                
                 # Format for dashboard
                 predictions.append({
                     'market': self.market_name,
@@ -106,11 +134,12 @@ class FootballMarket:
                     'confidence': pred['confidence'],
                     'probability': pred['probabilities']['home_win'],
                     'base_probability': pred['probabilities']['base_home_win'],
-                    'injury_adjustment': pred['injury_adjustment'],
+                    'injury_adjustment': pred.get('injury_adjustment', 0),
                     'home_team': home,
                     'away_team': away,
-                    'injury_details': pred['injury_details'],
+                    'injury_details': injury_details,
                     'probabilities': pred['probabilities'],
+                    'date': date
                 })
             except Exception as e:
                 print(f"Error predicting {home} vs {away}: {e}")
