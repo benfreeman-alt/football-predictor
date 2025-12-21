@@ -451,18 +451,23 @@ elif selected_market == "⚽ Football":
             filtered_predictions = []
             for pred in predictions:
                 
-                # Date range filter (only if prediction has a date)
+                # Date range filter
                 pred_date_str = pred.get('date', '')
-                if pred_date_str:  # Only filter if date exists
+                date_filtered_out = False
+                
+                if pred_date_str:  # Only apply date filter if prediction has a date
                     try:
                         pred_date = datetime.strptime(pred_date_str, '%Y-%m-%d').date()
-                        # Filter by date range
+                        # Check if prediction date is outside the selected range
                         if pred_date < start_date or pred_date > end_date:
-                            continue  # Skip this prediction
+                            date_filtered_out = True
                     except Exception as e:
-                        # If date parsing fails, include the match anyway
+                        # If date parsing fails, don't filter it out
                         pass
-                # If no date, include the match (don't filter it out)
+                
+                # Skip if filtered out by date
+                if date_filtered_out:
+                    continue
                 
                 # Confidence filter
                 if pred['confidence'] not in confidence_filter:

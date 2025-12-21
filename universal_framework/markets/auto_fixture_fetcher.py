@@ -87,43 +87,43 @@ class AutoFixtureFetcher:
                 
                 # Convert to our format
                 fixtures = []
-                today = datetime.now()
-                # Make today timezone-aware for comparison
-                if today.tzinfo is None:
-                    from datetime import timezone
-                    today = today.replace(tzinfo=timezone.utc)
                 
-                cutoff = today + timedelta(days=14)
+                # Use date-only comparison (not time)
+                from datetime import timezone
+                today_dt = datetime.now(timezone.utc)
+                today_date = today_dt.date()
+                cutoff_date = (today_dt + timedelta(days=14)).date()
                 
-                print(f"   Today: {today.strftime('%Y-%m-%d %H:%M UTC')}")
-                print(f"   Cutoff: {cutoff.strftime('%Y-%m-%d %H:%M UTC')}")
+                print(f"   Today: {today_date}")
+                print(f"   Cutoff: {cutoff_date}")
                 
                 for match in matches:
                     try:
                         match_date_str = match.get('utcDate', '')
-                        match_date = datetime.fromisoformat(match_date_str.replace('Z', '+00:00'))
+                        match_datetime = datetime.fromisoformat(match_date_str.replace('Z', '+00:00'))
+                        match_date = match_datetime.date()
                         
-                        # Only include FUTURE matches in next 14 days
-                        if match_date >= today and match_date <= cutoff:
+                        # Include matches from today onwards (not just future time)
+                        if match_date >= today_date and match_date <= cutoff_date:
                             fixtures.append({
                                 'home_team': self._clean_team_name(match['homeTeam']['name']),
                                 'away_team': self._clean_team_name(match['awayTeam']['name']),
                                 'date': match_date.strftime('%Y-%m-%d'),
-                                'time': match_date.strftime('%H:%M'),
+                                'time': match_datetime.strftime('%H:%M'),
                                 'venue': match.get('venue', 'TBD'),
                                 'status': 'NS',
-                                'datetime': match_date  # Keep for sorting
+                                'match_date': match_date  # Keep for sorting
                             })
                     except Exception as e:
                         print(f"   ⚠️  Error parsing match: {e}")
                         continue
                 
                 if fixtures:
-                    # Sort by date/time
-                    fixtures.sort(key=lambda x: x.get('datetime', datetime.max))
-                    # Remove datetime field (not needed in final output)
+                    # Sort by date
+                    fixtures.sort(key=lambda x: x.get('match_date', datetime.max.date()))
+                    # Remove match_date field (not needed in final output)
                     for f in fixtures:
-                        f.pop('datetime', None)
+                        f.pop('match_date', None)
                     
                     print(f"   ✅ Retrieved {len(fixtures)} fixtures from football-data.org")
                     return fixtures
