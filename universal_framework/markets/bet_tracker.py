@@ -29,7 +29,7 @@ class BetTracker:
         with open(self.data_file, 'w') as f:
             json.dump(self.bets, f, indent=2)
     
-    def add_bet(self, match, bet_type, odds, stake, result=None, profit=None, date=None):
+    def add_bet(self, match, bet_type, odds, stake, result=None, profit=None, date=None, bet_direction='BACK'):
         """
         Add a new bet
         
@@ -37,25 +37,39 @@ class BetTracker:
             match: "Team A vs Team B"
             bet_type: "Home Win", "Away Win or Draw", etc.
             odds: Decimal odds (e.g., 1.85)
-            stake: Amount bet (e.g., 10.00)
+            stake: Amount bet (e.g., 10.00) - For LAY bets, this is backer's stake
             result: "Won", "Lost", "Push", or None if pending
             profit: Actual profit/loss, or None to calculate
             date: Date of match (defaults to today)
+            bet_direction: "BACK" or "LAY"
         """
         
         if profit is None and result:
-            if result == "Won":
-                profit = stake * (odds - 1)
-            elif result == "Lost":
-                profit = -stake
-            else:  # Push
-                profit = 0
+            if bet_direction == 'LAY':
+                # LAY BET LOGIC
+                if result == "Won":
+                    # You win the backer's stake (minus commission)
+                    profit = stake * 0.98  # 2% commission
+                elif result == "Lost":
+                    # You pay the liability
+                    profit = -stake * (odds - 1)
+                else:  # Push
+                    profit = 0
+            else:
+                # BACK BET LOGIC (original)
+                if result == "Won":
+                    profit = stake * (odds - 1)
+                elif result == "Lost":
+                    profit = -stake
+                else:  # Push
+                    profit = 0
         
         bet = {
             'id': len(self.bets) + 1,
             'date': date or datetime.now().strftime('%Y-%m-%d'),
             'match': match,
             'bet_type': bet_type,
+            'bet_direction': bet_direction,
             'odds': odds,
             'stake': stake,
             'result': result,
@@ -81,12 +95,25 @@ class BetTracker:
             if bet['id'] == bet_id:
                 bet['result'] = result
                 
-                if result == "Won":
-                    bet['profit'] = bet['stake'] * (bet['odds'] - 1)
-                elif result == "Lost":
-                    bet['profit'] = -bet['stake']
-                else:  # Push
-                    bet['profit'] = 0
+                # Get bet direction (default to BACK for old bets)
+                bet_direction = bet.get('bet_direction', 'BACK')
+                
+                if bet_direction == 'LAY':
+                    # LAY BET LOGIC
+                    if result == "Won":
+                        bet['profit'] = bet['stake'] * 0.98  # Win backer's stake minus 2% commission
+                    elif result == "Lost":
+                        bet['profit'] = -bet['stake'] * (bet['odds'] - 1)  # Pay liability
+                    else:  # Push
+                        bet['profit'] = 0
+                else:
+                    # BACK BET LOGIC
+                    if result == "Won":
+                        bet['profit'] = bet['stake'] * (bet['odds'] - 1)
+                    elif result == "Lost":
+                        bet['profit'] = -bet['stake']
+                    else:  # Push
+                        bet['profit'] = 0
                 
                 self._save_bets()
                 return bet

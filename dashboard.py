@@ -873,6 +873,14 @@ elif selected_market == "📈 Bet Tracking":
         
         with col1:
             match = st.text_input("Match", placeholder="Team A vs Team B")
+            
+            bet_direction = st.selectbox("Bet Direction", [
+                "BACK (Normal bet)",
+                "LAY (Betfair Exchange)"
+            ])
+            # Extract just BACK or LAY
+            bet_direction_value = "LAY" if "LAY" in bet_direction else "BACK"
+            
             bet_type = st.selectbox("Bet Type", [
                 "Home Win",
                 "Away Win",
@@ -881,9 +889,15 @@ elif selected_market == "📈 Bet Tracking":
                 "Home Win or Draw (Double Chance)",
                 "Over 2.5 Goals",
                 "Under 2.5 Goals",
+                "Lay Home Team",
+                "Lay Away Team",
                 "Other"
             ])
             odds = st.number_input("Odds", min_value=1.01, max_value=100.0, value=2.0, step=0.01)
+            
+            # Show help text for lay bets
+            if bet_direction_value == "LAY":
+                st.caption("💡 For LAY bets: Enter backer's stake (not your liability)")
         
         with col2:
             # Bankroll calculator (outside of main stake input)
@@ -926,9 +940,10 @@ elif selected_market == "📈 Bet Tracking":
                     odds=odds,
                     stake=stake,
                     result=result_value,
-                    date=bet_date.strftime('%Y-%m-%d')
+                    date=bet_date.strftime('%Y-%m-%d'),
+                    bet_direction=bet_direction_value
                 )
-                st.success(f"✅ Added bet: {match}")
+                st.success(f"✅ Added {bet_direction_value} bet: {match}")
                 st.rerun()
     
     st.markdown("---")
@@ -972,7 +987,17 @@ elif selected_market == "📈 Bet Tracking":
                 
                 with col1:
                     st.markdown(f"**{bet['match']}**")
-                    st.caption(f"{bet['bet_type']} @ {bet['odds']:.2f} | £{bet['stake']:.2f} staked")
+                    
+                    # Show bet direction
+                    bet_dir = bet.get('bet_direction', 'BACK')
+                    direction_badge = "🔄 LAY" if bet_dir == 'LAY' else "📈 BACK"
+                    
+                    # For lay bets, show liability
+                    if bet_dir == 'LAY':
+                        liability = bet['stake'] * (bet['odds'] - 1)
+                        st.caption(f"{direction_badge} {bet['bet_type']} @ {bet['odds']:.2f} | Backer's stake: £{bet['stake']:.2f} | Your liability: £{liability:.2f}")
+                    else:
+                        st.caption(f"{direction_badge} {bet['bet_type']} @ {bet['odds']:.2f} | £{bet['stake']:.2f} staked")
                 
                 with col2:
                     status = bet['status']
