@@ -152,7 +152,7 @@ elif selected_market == "⚽ Football":
     st.markdown("**Elite 74.4% Accuracy Model** | V4 Historical + Injury Adjustment")
     
     # Bankroll Input
-    col1, col2, col3 = st.columns([2, 1, 1])
+    col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
     with col1:
         st.markdown("")
     with col2:
@@ -182,6 +182,22 @@ elif selected_market == "⚽ Football":
                         os.remove(os.path.join(cache_dir, file))
                     st.success("✅ Injury cache cleared!")
                     st.rerun()
+            except Exception as e:
+                st.error(f"Error: {e}")
+    
+    with col4:
+        st.markdown("")
+        st.markdown("")
+        if st.button("🗓️ Refresh Fixtures", help="Clear fixture cache and fetch latest"):
+            try:
+                import os
+                cache_file = "data/fixture_cache/auto_fixtures.json"
+                if os.path.exists(cache_file):
+                    os.remove(cache_file)
+                    st.success("✅ Fixture cache cleared!")
+                    st.rerun()
+                else:
+                    st.info("No cache to clear")
             except Exception as e:
                 st.error(f"Error: {e}")
     
@@ -409,39 +425,17 @@ elif selected_market == "⚽ Football":
             # Show count
             st.info(f"📊 Showing {len(filtered_predictions)} of {len(predictions)} matches")
             
-            # Group by date
-            from collections import defaultdict
-            by_date = defaultdict(list)
-            for pred in filtered_predictions:
-                # Extract date from fixture
-                match_date = pred.get('date', 'Unknown')
-                by_date[match_date].append(pred)
-            
-            # Sort dates
-            sorted_dates = sorted(by_date.keys())
-            
-            # Display by date
-            for match_date in sorted_dates:
-                # Date header
-                try:
-                    from datetime import datetime
-                    date_obj = datetime.strptime(match_date, '%Y-%m-%d')
-                    date_display = date_obj.strftime('%A, %d %B %Y')
-                except:
-                    date_display = match_date
+            # Display predictions
+            for idx, pred in enumerate(filtered_predictions):
                 
-                st.markdown(f"### 📅 {date_display}")
+                # Get value analysis if available
+                value_analysis = pred.get('value_analysis')
+                recommendation = value_analysis['recommendation'] if value_analysis else None
                 
-                for idx, pred in enumerate(by_date[match_date]):
-                    
-                    # Get value analysis if available
-                    value_analysis = pred.get('value_analysis')
-                    recommendation = value_analysis['recommendation'] if value_analysis else None
-                    
-                    # NEW LOGIC: Determine if this is a REAL bet (Model + EV)
-                    is_value_bet = False
-                    if recommendation and recommendation['action'] == 'BET':
-                        is_value_bet = True
+                # NEW LOGIC: Determine if this is a REAL bet (Model + EV)
+                is_value_bet = False
+                if recommendation and recommendation['action'] == 'BET':
+                    is_value_bet = True
                 
                 # Determine color and display based on Model + EV strategy
                 if is_value_bet:
