@@ -911,13 +911,23 @@ elif selected_market == "⚽ Football":
                         
                         with col1:
                             st.markdown(f"**{pred['home_team']}**")
-                            st.write(f"Injuries: {inj['home_injuries']}")
-                            st.write(f"Impact: {inj['home_impact']:.2f}")
+                            home_injuries = inj.get('home', {}).get('injuries', [])
+                            if home_injuries:
+                                st.write(f"Injuries: {len(home_injuries)}")
+                                for injury in home_injuries[:3]:  # Show top 3
+                                    st.caption(f"• {injury.get('player', 'Unknown')}: {injury.get('injury', 'Unknown')}")
+                            else:
+                                st.write("Injuries: 0")
                         
                         with col2:
                             st.markdown(f"**{pred['away_team']}**")
-                            st.write(f"Injuries: {inj['away_injuries']}")
-                            st.write(f"Impact: {inj['away_impact']:.2f}")
+                            away_injuries = inj.get('away', {}).get('injuries', [])
+                            if away_injuries:
+                                st.write(f"Injuries: {len(away_injuries)}")
+                                for injury in away_injuries[:3]:  # Show top 3
+                                    st.caption(f"• {injury.get('player', 'Unknown')}: {injury.get('injury', 'Unknown')}")
+                            else:
+                                st.write("Injuries: 0")
                     
                     st.markdown("---")
 
