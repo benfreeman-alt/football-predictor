@@ -87,114 +87,138 @@ class InjuryScraper:
         """Scrape injuries from Premier Injuries website"""
         
         try:
-            print(f"   Fetching injuries for {team_name}...")
+            print(f"   🔍 Fetching injuries for {team_name}...")
             
             # Premier Injuries URL (free, no API key needed)
-            # Format: premierinjuries.com/injury-table.php
             url = "https://www.premierinjuries.com/injury-table.php"
             
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
             
-            response = requests.get(url, headers=headers, timeout=10)
+            print(f"   Fetching from: {url}")
+            response = requests.get(url, headers=headers, timeout=15)
+            print(f"   Response status: {response.status_code}")
             
             if response.status_code != 200:
                 print(f"   ⚠️  Failed to fetch injuries (status {response.status_code})")
+                print(f"   Using fallback data instead...")
                 return self._get_fallback_injuries(team_name)
             
+            print(f"   ✅ Page loaded successfully, parsing HTML...")
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Find table with injuries
+            # Debug: Check what we got
+            page_text = soup.get_text()
+            if team_name.lower() in page_text.lower():
+                print(f"   ✅ Found '{team_name}' in page content")
+            else:
+                print(f"   ⚠️  '{team_name}' not found in page content")
+                print(f"   Available teams on page: {self._find_teams_on_page(soup)}")
+            
+            # Find all tables (Premier Injuries uses tables for each team)
+            tables = soup.find_all('table')
+            print(f"   Found {len(tables)} tables on page")
+            
             injuries = []
-            
-            # Look for team section
             team_found = False
-            for row in soup.find_all('tr'):
-                cells = row.find_all('td')
-                
-                if not cells:
-                    continue
-                
-                # Check if this row mentions the team
-                row_text = row.get_text()
-                
-                if team_name.lower() in row_text.lower():
-                    team_found = True
-                    
-                    # Try to extract player name, injury type, and return date
-                    try:
-                        player_name = cells[1].get_text(strip=True) if len(cells) > 1 else "Unknown"
-                        injury_type = cells[2].get_text(strip=True) if len(cells) > 2 else "Unknown"
-                        return_date = cells[3].get_text(strip=True) if len(cells) > 3 else "Unknown"
-                        
-                        if player_name and player_name != "Unknown":
-                            injuries.append({
-                                'player': player_name,
-                                'injury': injury_type,
-                                'return_date': return_date,
-                                'status': 'Out'
-                            })
-                    except:
-                        continue
             
-            if injuries:
-                print(f"   ✅ Found {len(injuries)} injuries for {team_name}")
+            # Try to find team-specific injury data
+            for table in tables:
+                table_text = table.get_text()
+                
+                # Check if this table is for our team
+                if team_name.lower() in table_text.lower():
+                    team_found = True
+                    print(f"   ✅ Found table for {team_name}")
+                    
+                    rows = table.find_all('tr')
+                    print(f"   Processing {len(rows)} rows...")
+                    
+                    for row in rows[1:]:  # Skip header
+                        cols = row.find_all('td')
+                        
+                        if len(cols) >= 3:
+                            try:
+                                player_name = cols[0].get_text(strip=True)
+                                injury_type = cols[1].get_text(strip=True)
+                                return_date = cols[2].get_text(strip=True) if len(cols) > 2 else "Unknown"
+                                
+                                if player_name and player_name not in ['Player', 'Name', '']:
+                                    injuries.append({
+                                        'player': player_name,
+                                        'injury': injury_type,
+                                        'return_date': return_date,
+                                        'status': 'Out'
+                                    })
+                                    print(f"      • {player_name}: {injury_type}")
+                            except Exception as e:
+                                print(f"      ⚠️  Error parsing row: {e}")
+                                continue
+            
+            if team_found and injuries:
+                print(f"   ✅ Scraped {len(injuries)} injuries for {team_name}")
                 return {
                     'team': team_name,
                     'injuries': injuries,
                     'last_updated': datetime.now().isoformat(),
-                    'source': 'Premier Injuries'
+                    'source': 'Premier Injuries (scraped)'
                 }
-            else:
-                print(f"   ℹ️  No injuries found for {team_name}")
+            elif team_found and not injuries:
+                print(f"   ℹ️  Team found but no injuries listed")
                 return {
                     'team': team_name,
                     'injuries': [],
                     'last_updated': datetime.now().isoformat(),
-                    'source': 'Premier Injuries'
+                    'source': 'Premier Injuries (scraped)'
                 }
+            else:
+                print(f"   ⚠️  Team not found on page, using fallback")
+                return self._get_fallback_injuries(team_name)
         
+        except requests.exceptions.Timeout:
+            print(f"   ❌ Request timeout after 15 seconds")
+            return self._get_fallback_injuries(team_name)
+        except requests.exceptions.RequestException as e:
+            print(f"   ❌ Network error: {e}")
+            return self._get_fallback_injuries(team_name)
         except Exception as e:
             print(f"   ❌ Error scraping injuries: {e}")
+            import traceback
+            traceback.print_exc()
             return self._get_fallback_injuries(team_name)
+    
+    def _find_teams_on_page(self, soup):
+        """Debug helper: Find what teams are mentioned on the page"""
+        try:
+            page_text = soup.get_text().lower()
+            premier_league_teams = [
+                'arsenal', 'aston villa', 'bournemouth', 'brentford', 'brighton',
+                'chelsea', 'crystal palace', 'everton', 'fulham', 'ipswich',
+                'leicester', 'liverpool', 'manchester city', 'manchester united',
+                'newcastle', 'nottingham forest', 'southampton', 'tottenham',
+                'west ham', 'wolves'
+            ]
+            found_teams = [team for team in premier_league_teams if team in page_text]
+            return found_teams[:5]  # Return first 5 found
+        except:
+            return []
     
     def _get_fallback_injuries(self, team_name):
         """
-        Return known injuries when scraping fails
+        Return empty injuries when scraping fails
         
-        This is manually updated with major injuries
+        The scraper will keep trying to fetch live data on next refresh
         """
         
-        known_injuries = {
-            'Everton': {
-                'team': 'Everton',
-                'injuries': [
-                    {'player': 'Kieran Dowell', 'injury': 'Knee', 'return_date': 'January 2025', 'status': 'Out'},
-                    {'player': 'Youssef Chermiti', 'injury': 'Ankle', 'return_date': 'Late December', 'status': 'Out'},
-                    {'player': 'Tim Iroegbunam', 'injury': 'Foot', 'return_date': 'January 2025', 'status': 'Out'}
-                ],
-                'last_updated': datetime.now().isoformat(),
-                'source': 'Fallback'
-            },
-            'Man City': {
-                'team': 'Man City',
-                'injuries': [
-                    {'player': 'Rodri', 'injury': 'ACL', 'return_date': 'End of season', 'status': 'Out'},
-                    {'player': 'Oscar Bobb', 'injury': 'Leg', 'return_date': 'Early 2025', 'status': 'Out'}
-                ],
-                'last_updated': datetime.now().isoformat(),
-                'source': 'Fallback'
-            },
-            # Add more teams as needed
-        }
+        print(f"   📝 Returning empty injuries for {team_name} (will retry next time)")
         
-        return known_injuries.get(team_name, {
+        return {
             'team': team_name,
             'injuries': [],
             'last_updated': datetime.now().isoformat(),
-            'source': 'Fallback'
-        })
+            'source': 'Fallback (empty)'
+        }
     
     def _load_from_cache(self, team_name):
         """Load injuries from cache if recent (< 24 hours)"""
