@@ -196,19 +196,33 @@ class InjuryScraper:
                 all_tables = soup.find_all('table')
                 print(f"   Scanning {len(all_tables)} tables...")
                 
-                for table in all_tables:
-                    # Check if table or nearby text contains team name
-                    table_context = str(table.parent)[:2000].lower()  # Check parent context
+                for idx, table in enumerate(all_tables):
+                    # Get more context - check the entire section
+                    # Go up to parent and grandparent to get surrounding text
+                    context_elements = [table]
+                    current = table.parent
+                    for _ in range(3):  # Go up 3 levels
+                        if current:
+                            context_elements.append(current)
+                            current = current.parent
+                    
+                    # Combine all context text
+                    table_context = ' '.join([str(elem)[:1000] for elem in context_elements]).lower()
                     
                     # Use the found variation
                     if found_variation and found_variation.lower() in table_context:
-                        # Make sure it's not just the team name appearing in injury data
                         # Check if there's actual player data
                         rows = table.find_all('tr')
                         if len(rows) > 1:  # Has more than just header
-                            print(f"   ✅ Found potential table via scan (matched '{found_variation}')")
+                            print(f"   ✅ Found table {idx+1} via scan (matched '{found_variation}')")
+                            print(f"   Table has {len(rows)} rows")
                             injury_table = table
                             break
+                        else:
+                            print(f"   ⚠️  Table {idx+1} matched but has no data rows")
+                
+                if not injury_table:
+                    print(f"   ❌ No suitable table found for '{team_name}'")
             
             if not injury_table:
                 print(f"   ⚠️  No injury table found after team header")
@@ -224,6 +238,15 @@ class InjuryScraper:
             # Parse the table
             rows = injury_table.find_all('tr')
             print(f"   Processing {len(rows)} rows...")
+            
+            # Debug: Show first row structure
+            if len(rows) > 1:
+                first_row = rows[1]
+                cols = first_row.find_all('td')
+                print(f"   First data row has {len(cols)} columns")
+                if cols:
+                    sample = ' | '.join([col.get_text(strip=True)[:30] for col in cols[:3]])
+                    print(f"   Sample: {sample}")
             
             for row in rows[1:]:  # Skip header row
                 cols = row.find_all('td')
