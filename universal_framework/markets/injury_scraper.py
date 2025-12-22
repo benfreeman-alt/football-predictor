@@ -253,6 +253,15 @@ class InjuryScraper:
         impact = min(num_injuries * -0.02, -0.10)
         
         return impact
+    
+    def get_injury_impact(self, team_name):
+        """
+        Alias for calculate_injury_impact for compatibility
+        
+        Returns:
+            float: Adjustment factor
+        """
+        return self.calculate_injury_impact(team_name)
 
 # Testing
 if __name__ == "__main__":
