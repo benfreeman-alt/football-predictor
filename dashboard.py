@@ -524,412 +524,110 @@ elif selected_market == "⚽ Football":
                         pred_date_str = pred.get('date', 'NO DATE')
                         st.write(f"Match: {pred.get('event', 'Unknown')} - Date: {pred_date_str}")
             
-            # Display predictions
-            for idx, pred in enumerate(filtered_predictions):
-                
-                # Get value analysis if available
-                value_analysis = pred.get('value_analysis')
+            # Display predictions in compact tiles
+            st.markdown("### 🎯 Upcoming Matches")
+            
+            # Group by recommendation type
+            bet_now = []
+            value_bets = []
+            model_only = []
+            skip_matches = []
+            
+            for p in filtered_predictions:
+                value_analysis = p.get('value_analysis')
                 recommendation = value_analysis['recommendation'] if value_analysis else None
                 
-                # NEW LOGIC: Determine if this is a REAL bet (Model + EV)
-                is_value_bet = False
                 if recommendation and recommendation['action'] == 'BET':
-                    is_value_bet = True
-                
-                # Determine color and display based on Model + EV strategy
-                if is_value_bet:
-                    # GREEN: Model predicts it + Positive EV = BET!
                     if recommendation['rating'] == '⭐⭐⭐':
-                        border_color = '#28a745'  # Bright green
-                        bet_label = '⭐⭐⭐ BET NOW'
-                    elif recommendation['rating'] == '⭐⭐':
-                        border_color = '#20c997'  # Teal
-                        bet_label = '⭐⭐ BET'
-                    elif recommendation['rating'] == '⭐':
-                        border_color = '#17a2b8'  # Light blue
-                        bet_label = '⭐ BET'
+                        bet_now.append(p)
                     else:
-                        border_color = '#6c757d'  # Gray
-                        bet_label = '✓ SMALL BET'
-                elif pred['confidence'] in ['HIGH', 'MEDIUM-HIGH']:
-                    # YELLOW: Model predicts but NO positive EV
-                    border_color = '#ffc107'
-                    bet_label = '📊 MODEL ONLY'
+                        value_bets.append(p)
+                elif p['confidence'] in ['HIGH', 'MEDIUM-HIGH']:
+                    model_only.append(p)
                 else:
-                    # RED: Skip (uncertain or low confidence)
-                    border_color = '#dc3545'
-                    bet_label = '❌ SKIP'
-                
-                with st.container():
-                    # Header with delete button
-                    header_col1, header_col2 = st.columns([9, 1])
-                    
-                    with header_col1:
-                        st.markdown(f"""
-                        <div style="border-left: 4px solid {border_color}; padding: 1rem; margin: 1rem 0; background-color: #f8f9fa; border-radius: 0.5rem;">
-                            <h3>{pred['event']} <span style="color: {border_color}; font-size: 0.8em;">{bet_label}</span></h3>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    
-                    with header_col2:
-                        # Delete button for custom fixtures
-                        if pred.get('is_custom'):
-                            if st.button("🗑️", key=f"delete_{idx}_{pred['event']}", help="Delete this fixture"):
-                                if 'custom_predictions' in st.session_state:
-                                    # Find and remove this prediction
-                                    st.session_state.custom_predictions = [
-                                        p for p in st.session_state.custom_predictions 
-                                        if p['event'] != pred['event']
-                                    ]
-                                    st.success(f"✅ Deleted {pred['event']}")
-                                    st.rerun()
-                    
-                    col1, col2, col3 = st.columns([2, 2, 1])
-                    
-                    with col1:
-                        st.markdown("**Model Prediction**")
+                    skip_matches.append(p)
+            
+            # Show summary counts
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("⭐⭐⭐ Bet Now", len(bet_now))
+            with col2:
+                st.metric("⭐ Value", len(value_bets))
+            with col3:
+                st.metric("📊 Model", len(model_only))
+            with col4:
+                st.metric("❌ Skip", len(skip_matches))
+            
+            st.markdown("---")
+            
+            # Display BET NOW matches (collapsed tiles)
+            if bet_now:
+                st.markdown("### ⭐⭐⭐ BET NOW")
+                for pred in bet_now:
+                    rec = pred['value_analysis']['recommendation']
+                    with st.expander(f"**{pred['event']}** - {rec['bet_type']} @ {rec['odds']:.2f}", expanded=False):
+                        col1, col2, col3 = st.columns(3)
                         
-                        # Make prediction clearer
-                        display_prediction = pred['prediction']
-                        if 'Away Win' in display_prediction and 'or Draw' not in display_prediction:
-                            display_prediction = 'Away Win or Draw'
-                        elif pred['prediction'] == 'SKIP':
-                            display_prediction = 'Too Close to Call'
+                        with col1:
+                            st.write(f"**Prediction:** {pred['prediction']}")
+                            st.write(f"**Confidence:** {pred['confidence']}")
+                            st.caption(f"📅 {pred.get('date', 'TBD')} {pred.get('time', '')}")
                         
-                        st.metric("Outcome", display_prediction)
-                        st.metric("Confidence", pred['confidence'])
-                    
-                    with col2:
-                        st.markdown("**Probabilities**")
-                        
-                        home_prob = pred['probability']
-                        away_draw_prob = 1 - home_prob
-                        
-                        # Show BOTH probabilities clearly
-                        st.metric("Home Win", f"{home_prob:.1%}")
-                        st.metric("Away Win or Draw", f"{away_draw_prob:.1%}")
-                        
-                        if pred['injury_adjustment'] != 0:
-                            st.caption(f"Injury adjustment: {pred['injury_adjustment']:+.1%}")
-                    
-                    with col3:
-                        # NEW: Clear Model + EV Strategy Display
-                        if is_value_bet:
-                            st.success(f"✅ {bet_label}")
-                            st.caption(f"Model + Value: {recommendation['stake_recommendation']:.1f}% stake")
-                        elif pred['confidence'] in ['HIGH', 'MEDIUM-HIGH']:
-                            st.warning("📊 MODEL ONLY")
-                            st.caption("No +EV (wait for better odds)")
-                        elif pred['confidence'] == 'MEDIUM':
-                            st.info("⚠️ WATCH")
-                            st.caption("Medium confidence")
-                        else:
-                            st.error("❌ SKIP")
-                            st.caption("Low confidence")
-                    
-                    # Betting Recommendation Section
-                    if recommendation:
-                        with st.expander("💰 Betting Recommendation", expanded=(recommendation['action'] == 'BET')):
-                            if recommendation['action'] == 'BET':
-                                st.success(f"**{recommendation['rating']} RECOMMENDED BET**")
-                                
-                                col1, col2 = st.columns(2)
-                                
-                                with col1:
-                                    st.markdown("**Bet Details:**")
-                                    st.write(f"**Type:** {recommendation['bet_type']}")
-                                    st.write(f"**Odds:** {recommendation['odds']:.2f}")
-                                    
-                                    # Calculate actual stake amount
-                                    stake_pct = recommendation['stake_recommendation']
-                                    kelly_stake = st.session_state.bankroll * (stake_pct / 100)
-                                    
-                                    # Check if below Betfair minimum
-                                    if kelly_stake < 5.0:
-                                        st.write(f"**Kelly Stake:** {stake_pct:.2f}% (£{kelly_stake:.2f})")
-                                        st.warning(f"⚠️ Below Betfair £5 minimum")
-                                        st.caption("Options: (1) Skip this bet, or (2) Bet £5 minimum (reduces ROI)")
-                                        
-                                        # Show what £5 represents
-                                        actual_pct = (5.0 / st.session_state.bankroll) * 100
-                                        st.caption(f"£5 = {actual_pct:.2f}% of bankroll (higher risk than Kelly suggests)")
-                                        
-                                        stake_amount = 5.0  # For profit calculation
-                                    else:
-                                        stake_amount = kelly_stake
-                                        st.write(f"**Stake:** {stake_pct:.2f}% (£{stake_amount:.2f})")
-                                    
-                                    # Show potential profit
-                                    potential_profit = stake_amount * (recommendation['odds'] - 1)
-                                    st.write(f"**Potential Profit:** £{potential_profit:.2f}")
-                                
-                                with col2:
-                                    st.markdown("**Value Analysis:**")
-                                    st.write(f"**Expected Value:** {recommendation['expected_value']*100:+.1f}%")
-                                    st.write(f"**Rating:** {recommendation['rating']}")
-                                    st.write(f"**Confidence:** {pred['confidence']}")
-                                
-                                st.info(f"💡 {recommendation['reason']}")
-                                
-                                # Show odds breakdown if available
-                                if pred.get('odds'):
-                                    st.markdown("**Market Odds:**")
-                                    odds_data = pred['odds']
-                                    odds_col1, odds_col2, odds_col3 = st.columns(3)
-                                    
-                                    with odds_col1:
-                                        if odds_data.get('home_win'):
-                                            st.write(f"Home Win: {odds_data['home_win']:.2f}")
-                                    with odds_col2:
-                                        if odds_data.get('draw'):
-                                            st.write(f"Draw: {odds_data['draw']:.2f}")
-                                    with odds_col3:
-                                        if odds_data.get('away_win'):
-                                            st.write(f"Away Win: {odds_data['away_win']:.2f}")
-                                
-                                # MANUAL ODDS CALCULATOR
-                                st.markdown("---")
-                                st.markdown("**🔢 Check Different Odds**")
-                                st.caption("Enter custom odds to see updated EV calculation")
-                                
-                                calc_col1, calc_col2, calc_col3 = st.columns(3)
-                                
-                                home_prob = pred['probability']
-                                away_draw_prob = 1 - home_prob
-                                
-                                with calc_col1:
-                                    custom_home_odds = st.number_input(
-                                        "Home Win Odds",
-                                        min_value=1.01,
-                                        max_value=100.0,
-                                        value=float(pred.get('odds', {}).get('home_win', 2.0)) if pred.get('odds') else 2.0,
-                                        step=0.1,
-                                        key=f"custom_home_{pred['event']}"
-                                    )
-                                
-                                with calc_col2:
-                                    custom_draw_odds = st.number_input(
-                                        "Draw Odds",
-                                        min_value=1.01,
-                                        max_value=100.0,
-                                        value=float(pred.get('odds', {}).get('draw', 3.5)) if pred.get('odds') else 3.5,
-                                        step=0.1,
-                                        key=f"custom_draw_{pred['event']}"
-                                    )
-                                
-                                with calc_col3:
-                                    custom_away_odds = st.number_input(
-                                        "Away Win Odds",
-                                        min_value=1.01,
-                                        max_value=100.0,
-                                        value=float(pred.get('odds', {}).get('away_win', 3.0)) if pred.get('odds') else 3.0,
-                                        step=0.1,
-                                        key=f"custom_away_{pred['event']}"
-                                    )
-                                
-                                # Calculate custom double chance odds
-                                custom_dc_away_draw = 1 / ((1/custom_away_odds) + (1/custom_draw_odds))
-                                custom_dc_home_draw = 1 / ((1/custom_home_odds) + (1/custom_draw_odds))
-                                
-                                # Calculate EVs with custom odds
-                                custom_home_ev = (home_prob * custom_home_odds) - 1
-                                custom_away_draw_ev = (away_draw_prob * custom_dc_away_draw) - 1
-                                
-                                # Show results
-                                st.markdown("**Custom EV Results:**")
-                                
-                                result_col1, result_col2 = st.columns(2)
-                                
-                                with result_col1:
-                                    if custom_home_ev > 0:
-                                        st.success(f"✅ Home Win EV: **{custom_home_ev*100:+.1f}%**")
-                                    else:
-                                        st.error(f"❌ Home Win EV: **{custom_home_ev*100:+.1f}%**")
-                                
-                                with result_col2:
-                                    if custom_away_draw_ev > 0:
-                                        st.success(f"✅ Away/Draw EV: **{custom_away_draw_ev*100:+.1f}%**")
-                                    else:
-                                        st.error(f"❌ Away/Draw EV: **{custom_away_draw_ev*100:+.1f}%**")
-                                
-                                st.caption(f"Double Chance (Away/Draw) odds: {custom_dc_away_draw:.2f}")
-                                
-                                # Recommendation based on custom odds
-                                if home_prob > 0.55 and custom_home_ev > 0.05:
-                                    st.info("💡 At these odds: **Bet Home Win** looks profitable!")
-                                elif home_prob < 0.45 and custom_away_draw_ev > 0.05:
-                                    st.info("💡 At these odds: **Bet Away/Draw** looks profitable!")
-                                elif max(custom_home_ev, custom_away_draw_ev) > 0.05:
-                                    st.warning("⚠️ These odds show +EV, but consider if they match what model predicts")
-                                else:
-                                    st.warning("⚠️ At these odds: No positive EV - wait for better odds")
-                                
-                                # LAY BETTING CALCULATOR
-                                st.markdown("---")
-                                st.markdown("**💱 Lay Betting Calculator (Betfair Exchange)**")
-                                st.caption("Compare traditional betting vs laying on an exchange")
-                                
-                                lay_col1, lay_col2 = st.columns(2)
-                                
-                                with lay_col1:
-                                    st.markdown("**Traditional Bet:**")
-                                    trad_stake_input = st.number_input(
-                                        "Stake (£)",
-                                        min_value=1.0,
-                                        max_value=10000.0,
-                                        value=float(st.session_state.bankroll * 0.01),  # 1% of bankroll
-                                        step=5.0,
-                                        key=f"lay_trad_stake_{pred['event']}"
-                                    )
-                                    trad_odds_input = st.number_input(
-                                        "Double Chance Odds",
-                                        min_value=1.01,
-                                        max_value=10.0,
-                                        value=custom_dc_away_draw if custom_away_draw_ev > 0 else 1.50,
-                                        step=0.01,
-                                        key=f"lay_trad_odds_{pred['event']}"
-                                    )
-                                
-                                with lay_col2:
-                                    st.markdown("**Lay Bet (Exchange):**")
-                                    lay_odds_input = st.number_input(
-                                        "Lay Odds (e.g., Man United)",
-                                        min_value=1.01,
-                                        max_value=100.0,
-                                        value=custom_home_odds if custom_home_odds > 0 else 2.00,
-                                        step=0.01,
-                                        key=f"lay_odds_{pred['event']}"
-                                    )
-                                    commission_input = st.number_input(
-                                        "Commission %",
-                                        min_value=0.0,
-                                        max_value=10.0,
-                                        value=2.0,
-                                        step=0.5,
-                                        key=f"lay_commission_{pred['event']}"
-                                    )
-                                
-                                # Calculate
-                                try:
-                                    import sys
-                                    sys.path.insert(0, 'universal_framework/markets')
-                                    from lay_calculator import LayCalculator
-                                    
-                                    calc = LayCalculator(commission_rate=commission_input/100)
-                                    comparison = calc.compare_bets(
-                                        traditional_stake=trad_stake_input,
-                                        traditional_odds=trad_odds_input,
-                                        lay_odds=lay_odds_input
-                                    )
-                                    
-                                    # Display results
-                                    st.markdown("**📊 Comparison Results:**")
-                                    
-                                    result_col1, result_col2, result_col3 = st.columns(3)
-                                    
-                                    with result_col1:
-                                        st.metric(
-                                            "Traditional Bet",
-                                            f"£{comparison['traditional']['stake']:.2f}",
-                                            f"+£{comparison['traditional']['profit']:.2f}"
-                                        )
-                                        st.caption(f"Risk: £{comparison['traditional']['risk']:.2f}")
-                                        st.caption(f"ROI: {comparison['traditional']['roi']:.1f}%")
-                                    
-                                    with result_col2:
-                                        st.metric(
-                                            "Lay Bet",
-                                            f"£{comparison['lay']['backers_stake']:.2f}",
-                                            f"+£{comparison['lay']['profit']:.2f}"
-                                        )
-                                        st.caption(f"Liability: £{comparison['lay']['liability']:.2f}")
-                                        st.caption(f"ROI: {comparison['lay']['roi']:.1f}%")
-                                    
-                                    with result_col3:
-                                        better = comparison['comparison']['better_option']
-                                        diff = comparison['comparison']['profit_difference']
-                                        pct = comparison['comparison']['percentage_better']
-                                        
-                                        if better == "LAY":
-                                            st.success(f"**LAY is better!**")
-                                            st.metric("Extra Profit", f"+£{diff:.2f}", f"+{pct:.1f}%")
-                                        else:
-                                            st.warning(f"**Traditional better**")
-                                            st.metric("Difference", f"£{abs(diff):.2f}", f"{pct:.1f}%")
-                                    
-                                    # Key info box
-                                    if better == "LAY":
-                                        st.success(f"""
-                                        ✅ **Recommendation: LAY on Betfair**
-                                        
-                                        - Lay stake: **£{comparison['lay']['backers_stake']:.2f}** at {lay_odds_input:.2f}
-                                        - Your liability: **£{comparison['lay']['liability']:.2f}**
-                                        - Profit if win: **£{comparison['lay']['profit']:.2f}** (after {commission_input}% commission)
-                                        - Extra profit vs traditional: **£{diff:.2f}** ({pct:.1f}% more)
-                                        """)
-                                    else:
-                                        st.info(f"""
-                                        💡 **Stick with traditional bet**
-                                        
-                                        Traditional betting offers better value at these odds.
-                                        """)
-                                
-                                except Exception as e:
-                                    st.error(f"Lay calculator error: {e}")
+                        with col2:
+                            stake_pct = rec['stake_recommendation']
+                            kelly = st.session_state.bankroll * (stake_pct / 100)
+                            st.write(f"**Stake:** {stake_pct:.2f}%")
                             
+                            if kelly < 5.0:
+                                st.write(f"**Amount:** £5.00 (min)")
+                                st.caption(f"⚠️ Kelly: £{kelly:.2f}")
                             else:
-                                st.warning("❌ No positive value found")
-                                st.caption(recommendation['reason'])
-                    else:
-                        # No odds available - show model-based recommendation
-                        with st.expander("📊 Model Recommendation"):
-                            st.markdown("**Based on Model Confidence Only** (No odds data)")
-                            
-                            home_prob = pred['probability']
-                            
-                            if pred['confidence'] in ['HIGH', 'MEDIUM-HIGH']:
-                                if home_prob > 0.60:
-                                    st.success("**Recommended:** Bet Home Win")
-                                    st.write(f"Home win probability: {home_prob:.1%}")
-                                    st.write(f"Suggested stake: 1-2% of bankroll")
-                                elif home_prob < 0.40:
-                                    st.success("**Recommended:** Bet Away Win or Draw (Double Chance)")
-                                    st.write(f"Away/Draw probability: {(1-home_prob):.1%}")
-                                    st.write(f"Suggested stake: 1-2% of bankroll")
-                                else:
-                                    st.warning("Confidence moderate - proceed with caution")
-                            else:
-                                st.error("Low confidence - skip this match")
-                            
-                            st.info("💡 Enable odds API for value-based recommendations!")
-                    
-                    # Expandable injury details
-                    with st.expander("🏥 Injury Report"):
-                        inj = pred['injury_details']
+                                st.write(f"**Amount:** £{kelly:.2f}")
                         
+                        with col3:
+                            stake = max(5.0, kelly)
+                            profit = (rec['odds'] - 1) * stake
+                            st.write(f"**Profit:** +£{profit:.2f}")
+                            st.write(f"**Edge:** {rec.get('edge', 0):.1%}")
+            
+            # Display VALUE BETS
+            if value_bets:
+                st.markdown("### ⭐ Value Bets")
+                for pred in value_bets:
+                    rec = pred['value_analysis']['recommendation']
+                    with st.expander(f"**{pred['event']}** {rec['rating']}", expanded=False):
                         col1, col2 = st.columns(2)
                         
                         with col1:
-                            st.markdown(f"**{pred['home_team']}**")
-                            home_injuries = inj.get('home', {}).get('injuries', [])
-                            if home_injuries:
-                                st.write(f"Injuries: {len(home_injuries)}")
-                                for injury in home_injuries[:3]:  # Show top 3
-                                    st.caption(f"• {injury.get('player', 'Unknown')}: {injury.get('injury', 'Unknown')}")
-                            else:
-                                st.write("Injuries: 0")
+                            st.write(f"**{rec['bet_type']}** @ {rec['odds']:.2f}")
+                            st.write(f"Confidence: {pred['confidence']}")
+                            st.caption(f"📅 {pred.get('date', 'TBD')}")
                         
                         with col2:
-                            st.markdown(f"**{pred['away_team']}**")
-                            away_injuries = inj.get('away', {}).get('injuries', [])
-                            if away_injuries:
-                                st.write(f"Injuries: {len(away_injuries)}")
-                                for injury in away_injuries[:3]:  # Show top 3
-                                    st.caption(f"• {injury.get('player', 'Unknown')}: {injury.get('injury', 'Unknown')}")
-                            else:
-                                st.write("Injuries: 0")
-                    
-                    st.markdown("---")
+                            stake_pct = rec['stake_recommendation']
+                            kelly = st.session_state.bankroll * (stake_pct / 100)
+                            stake = max(5.0, kelly)
+                            profit = (rec['odds'] - 1) * stake
+                            st.write(f"Stake: £{stake:.2f}")
+                            st.write(f"Profit: +£{profit:.2f}")
+            
+            # Display MODEL ONLY (collapsed)
+            if model_only:
+                with st.expander(f"📊 Model Predictions - No +EV ({len(model_only)} matches)", expanded=False):
+                    for pred in model_only:
+                        st.markdown(f"**{pred['event']}**")
+                        st.caption(f"• Prediction: {pred['prediction']} ({pred['confidence']})")
+                        st.caption(f"• Home Win Prob: {pred['probability']:.0%}")
+                        st.caption(f"• ⚠️ Model confident but odds not favorable - wait for better price")
+                        st.caption(f"• 📅 {pred.get('date', 'TBD')}")
+                        st.markdown("---")
+            
+            # Display SKIP matches (collapsed)
+            if skip_matches:
+                with st.expander(f"❌ Skip These Matches ({len(skip_matches)})", expanded=False):
+                    for pred in skip_matches:
+                        st.caption(f"• {pred['event']} - {pred['confidence']} - {pred.get('date', 'TBD')}")
+
 
 elif selected_market == "🗳️ Elections":
     st.header("🗳️ US Elections")
