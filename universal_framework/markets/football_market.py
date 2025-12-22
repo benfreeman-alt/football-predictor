@@ -104,6 +104,10 @@ class FootballMarket:
         
         # Get predictions
         predictions = []
+        errors = []
+        
+        print(f"\n🎯 Generating predictions for {len(fixtures)} fixtures...")
+        
         for home, away, date in fixtures:
             try:
                 pred = self.predictor.predict_match(home, away, date)
@@ -141,9 +145,22 @@ class FootballMarket:
                     'probabilities': pred['probabilities'],
                     'date': date
                 })
+                print(f"   ✅ {home} vs {away}")
+                
             except Exception as e:
-                print(f"Error predicting {home} vs {away}: {e}")
+                error_msg = f"❌ Error predicting {home} vs {away}: {e}"
+                print(error_msg)
+                errors.append(error_msg)
+                import traceback
+                traceback.print_exc()
                 continue
+        
+        if errors:
+            print(f"\n⚠️  {len(errors)} predictions failed:")
+            for err in errors[:5]:  # Show first 5
+                print(f"   {err}")
+        
+        print(f"\n✅ Generated {len(predictions)} predictions successfully")
         
         # Add odds and value analysis
         if include_odds:
