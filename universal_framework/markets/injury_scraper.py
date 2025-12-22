@@ -262,6 +262,20 @@ class InjuryScraper:
             float: Adjustment factor
         """
         return self.calculate_injury_impact(team_name)
+    
+    def get_injury_count(self, team_name):
+        """
+        Get number of injuries for a team
+        
+        Returns:
+            int: Number of injured players
+        """
+        injuries = self.get_team_injuries(team_name)
+        
+        if not injuries or not injuries.get('injuries'):
+            return 0
+        
+        return len(injuries['injuries'])
 
 # Testing
 if __name__ == "__main__":
