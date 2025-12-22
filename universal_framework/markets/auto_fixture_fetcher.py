@@ -75,11 +75,13 @@ class AutoFixtureFetcher:
             
             response = requests.get(url, headers=headers, params=params, timeout=10)
             
+            print(f"   API Response Status: {response.status_code}")
+            
             if response.status_code == 200:
                 data = response.json()
                 matches = data.get('matches', [])
                 
-                print(f"   Found {len(matches)} scheduled matches")
+                print(f"   Found {len(matches)} SCHEDULED matches from API")
                 
                 if not matches:
                     print("   ⚠️  No scheduled matches found")
@@ -97,26 +99,39 @@ class AutoFixtureFetcher:
                 print(f"   Today: {today_date}")
                 print(f"   Cutoff: {cutoff_date}")
                 
+                fixtures_added = 0
+                fixtures_skipped = 0
+                
                 for match in matches:
                     try:
                         match_date_str = match.get('utcDate', '')
                         match_datetime = datetime.fromisoformat(match_date_str.replace('Z', '+00:00'))
                         match_date = match_datetime.date()
                         
+                        home = self._clean_team_name(match['homeTeam']['name'])
+                        away = self._clean_team_name(match['awayTeam']['name'])
+                        
                         # Include matches from today onwards (not just future time)
                         if match_date >= today_date and match_date <= cutoff_date:
                             fixtures.append({
-                                'home_team': self._clean_team_name(match['homeTeam']['name']),
-                                'away_team': self._clean_team_name(match['awayTeam']['name']),
+                                'home_team': home,
+                                'away_team': away,
                                 'date': match_date.strftime('%Y-%m-%d'),
                                 'time': match_datetime.strftime('%H:%M'),
                                 'venue': match.get('venue', 'TBD'),
                                 'status': 'NS',
                                 'match_date': match_date  # Keep for sorting
                             })
+                            fixtures_added += 1
+                        else:
+                            fixtures_skipped += 1
+                            if fixtures_skipped <= 3:  # Show first 3 skipped
+                                print(f"   Skipped: {home} vs {away} on {match_date} (outside range)")
                     except Exception as e:
                         print(f"   ⚠️  Error parsing match: {e}")
                         continue
+                
+                print(f"   Added: {fixtures_added} fixtures, Skipped: {fixtures_skipped} fixtures")
                 
                 if fixtures:
                     # Sort by date

@@ -407,12 +407,35 @@ elif selected_market == "⚽ Football":
         
         predictions = football.get_predictions()
         
+        # DEBUG: Show what we got
+        st.write(f"🔍 DEBUG: Received {len(predictions) if predictions else 0} predictions from football.get_predictions()")
+        
         # Add custom predictions if any
         if 'custom_predictions' in st.session_state:
             predictions = st.session_state.custom_predictions + predictions
         
         if not predictions:
-            st.info("No predictions available. Add fixtures to get predictions.")
+            st.error("❌ No predictions available. Add fixtures to get predictions.")
+            
+            # Show debug info
+            with st.expander("🐛 Debug Information"):
+                st.write("**Troubleshooting:**")
+                st.write("1. Click the '🗓️ Refresh Fixtures' button above")
+                st.write("2. Check your FOOTBALL_DATA_TOKEN in Streamlit secrets")
+                st.write("3. Try adding a custom fixture below")
+                
+                # Try to manually check fixture loader
+                try:
+                    from simple_fixture_loader import SimpleFixtureLoader
+                    loader = SimpleFixtureLoader()
+                    upcoming = loader.get_upcoming_fixtures(days_ahead=14)
+                    st.write(f"**Fixture loader test:** Found {len(upcoming) if upcoming else 0} fixtures")
+                    if upcoming:
+                        st.write("Sample fixtures:")
+                        for fixture in upcoming[:3]:
+                            st.write(f"  - {fixture.get('home_team')} vs {fixture.get('away_team')} on {fixture.get('date')}")
+                except Exception as e:
+                    st.write(f"**Fixture loader error:** {e}")
         else:
             # ENHANCED FILTER OPTIONS
             st.markdown("### 🔍 Filter Predictions")
