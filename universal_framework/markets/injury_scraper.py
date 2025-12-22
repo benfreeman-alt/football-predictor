@@ -84,16 +84,19 @@ class InjuryScraper:
         return injuries
     
     def _scrape_team_injuries(self, team_name):
-        """Scrape injuries from Premier Injuries website"""
+        """Scrape injuries from PhysioRoom website"""
         
         try:
             print(f"   🔍 Fetching injuries for {team_name}...")
             
-            # Premier Injuries URL (free, no API key needed)
-            url = "https://www.premierinjuries.com/injury-table.php"
+            # PhysioRoom URL - more reliable for scraping
+            url = "https://www.physioroom.com/news/english_premier_league/epl_injury_table.php"
             
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Referer': 'https://www.physioroom.com/',
             }
             
             print(f"   Fetching from: {url}")
@@ -102,79 +105,75 @@ class InjuryScraper:
             
             if response.status_code != 200:
                 print(f"   ⚠️  Failed to fetch injuries (status {response.status_code})")
-                print(f"   Using fallback data instead...")
+                print(f"   Using fallback (empty injuries)...")
                 return self._get_fallback_injuries(team_name)
             
             print(f"   ✅ Page loaded successfully, parsing HTML...")
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Debug: Check what we got
-            page_text = soup.get_text()
-            if team_name.lower() in page_text.lower():
-                print(f"   ✅ Found '{team_name}' in page content")
-            else:
-                print(f"   ⚠️  '{team_name}' not found in page content")
-                print(f"   Available teams on page: {self._find_teams_on_page(soup)}")
-            
-            # Find all tables (Premier Injuries uses tables for each team)
-            tables = soup.find_all('table')
-            print(f"   Found {len(tables)} tables on page")
-            
             injuries = []
-            team_found = False
             
-            # Try to find team-specific injury data
+            # PhysioRoom uses tables with class 'injury_table'
+            tables = soup.find_all('table', class_='injury_table')
+            
+            if not tables:
+                # Try finding any tables
+                tables = soup.find_all('table')
+                print(f"   Found {len(tables)} tables (no class='injury_table')")
+            else:
+                print(f"   Found {len(tables)} injury tables")
+            
             for table in tables:
-                table_text = table.get_text()
+                # Look for team name in the table or surrounding divs
+                table_section = str(table.parent)
                 
-                # Check if this table is for our team
-                if team_name.lower() in table_text.lower():
-                    team_found = True
-                    print(f"   ✅ Found table for {team_name}")
+                if team_name.lower() not in table_section.lower():
+                    continue
+                
+                print(f"   ✅ Found table section for {team_name}")
+                
+                # Parse injury rows
+                rows = table.find_all('tr')
+                print(f"   Processing {len(rows)} rows...")
+                
+                for row in rows[1:]:  # Skip header row
+                    cols = row.find_all('td')
                     
-                    rows = table.find_all('tr')
-                    print(f"   Processing {len(rows)} rows...")
-                    
-                    for row in rows[1:]:  # Skip header
-                        cols = row.find_all('td')
-                        
-                        if len(cols) >= 3:
-                            try:
-                                player_name = cols[0].get_text(strip=True)
-                                injury_type = cols[1].get_text(strip=True)
-                                return_date = cols[2].get_text(strip=True) if len(cols) > 2 else "Unknown"
-                                
-                                if player_name and player_name not in ['Player', 'Name', '']:
-                                    injuries.append({
-                                        'player': player_name,
-                                        'injury': injury_type,
-                                        'return_date': return_date,
-                                        'status': 'Out'
-                                    })
-                                    print(f"      • {player_name}: {injury_type}")
-                            except Exception as e:
-                                print(f"      ⚠️  Error parsing row: {e}")
-                                continue
+                    if len(cols) >= 3:
+                        try:
+                            player_name = cols[0].get_text(strip=True)
+                            injury_type = cols[1].get_text(strip=True)
+                            return_date = cols[2].get_text(strip=True) if len(cols) > 2 else "Unknown"
+                            
+                            # Skip header rows or empty cells
+                            if player_name and player_name not in ['Player', 'Name', '', 'Injury', 'Status']:
+                                injuries.append({
+                                    'player': player_name,
+                                    'injury': injury_type,
+                                    'return_date': return_date,
+                                    'status': 'Out'
+                                })
+                                print(f"      • {player_name}: {injury_type}")
+                        except Exception as e:
+                            print(f"      ⚠️  Error parsing row: {e}")
+                            continue
             
-            if team_found and injuries:
+            if injuries:
                 print(f"   ✅ Scraped {len(injuries)} injuries for {team_name}")
                 return {
                     'team': team_name,
                     'injuries': injuries,
                     'last_updated': datetime.now().isoformat(),
-                    'source': 'Premier Injuries (scraped)'
+                    'source': 'PhysioRoom (scraped)'
                 }
-            elif team_found and not injuries:
-                print(f"   ℹ️  Team found but no injuries listed")
+            else:
+                print(f"   ℹ️  No injuries found for {team_name}")
                 return {
                     'team': team_name,
                     'injuries': [],
                     'last_updated': datetime.now().isoformat(),
-                    'source': 'Premier Injuries (scraped)'
+                    'source': 'PhysioRoom (scraped)'
                 }
-            else:
-                print(f"   ⚠️  Team not found on page, using fallback")
-                return self._get_fallback_injuries(team_name)
         
         except requests.exceptions.Timeout:
             print(f"   ❌ Request timeout after 15 seconds")
