@@ -111,42 +111,104 @@ class InjuryScraper:
             print(f"   ✅ Page loaded successfully, parsing HTML...")
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            injuries = []
+            # Debug: Show what team names are actually on the page
+            page_text = soup.get_text().lower()
+            possible_variations = [
+                team_name,
+                team_name.replace("'", ""),  # Nott'm → Nottm
+                team_name.replace(" ", ""),   # Man City → ManCity
+                team_name.split()[0] if " " in team_name else team_name,  # Man City → Man
+            ]
             
-            # PhysioRoom structure: Team name appears before the injury table
-            # Look for the team name as a heading or in a div, then get the next table
+            # Add common variations
+            name_map = {
+                "Man City": ["manchester city", "man city", "man. city"],
+                "Man United": ["manchester united", "man united", "man utd", "man. united"],
+                "Tottenham": ["tottenham", "spurs", "tottenham hotspur"],
+                "Newcastle": ["newcastle", "newcastle united"],
+                "West Ham": ["west ham", "west ham united"],
+                "Brighton": ["brighton", "brighton & hove albion", "brighton and hove albion"],
+                "Nott'm Forest": ["nottingham forest", "nottm forest", "nott'm forest", "forest"],
+                "Leicester": ["leicester", "leicester city"],
+                "Wolves": ["wolves", "wolverhampton", "wolverhampton wanderers"],
+                "Bournemouth": ["bournemouth", "afc bournemouth"],
+                "Ipswich": ["ipswich", "ipswich town"],
+            }
             
-            # Find all text that contains the team name
-            team_headers = soup.find_all(['h3', 'h4', 'div', 'p'], string=lambda text: text and team_name.lower() in text.lower() if text else False)
+            # Get variations for this team
+            search_terms = name_map.get(team_name, [team_name.lower()])
             
-            print(f"   Found {len(team_headers)} potential team headers for '{team_name}'")
+            print(f"   Searching for variations: {search_terms[:3]}")
             
-            if not team_headers:
-                print(f"   ⚠️  Team '{team_name}' not found on page")
+            # Find which variation exists on page
+            found_variation = None
+            for variation in search_terms:
+                if variation.lower() in page_text:
+                    found_variation = variation
+                    print(f"   ✅ Found '{variation}' in page content")
+                    break
+            
+            if not found_variation:
+                print(f"   ⚠️  None of the variations found on page")
+                # Debug: show what teams ARE on the page
+                prem_teams = ['arsenal', 'chelsea', 'liverpool', 'man city', 'man united', 
+                             'tottenham', 'newcastle', 'manchester', 'brighton', 'villa']
+                found_teams = [t for t in prem_teams if t in page_text]
+                print(f"   Teams found on page: {found_teams[:5]}")
                 return self._get_fallback_injuries(team_name)
             
-            # Get the first matching header
-            team_header = team_headers[0]
-            print(f"   ✅ Found team header: {team_header.name} - {team_header.get_text(strip=True)[:50]}")
+            injuries = []
             
-            # Find the next table after this header
-            current = team_header
+            # Method 1: Find team name in headers using the found variation
+            team_headers = soup.find_all(['h3', 'h4', 'h2', 'div', 'p', 'span', 'strong', 'b'], 
+                                        string=lambda text: text and found_variation.lower() in text.lower() if text else False)
+            
+            print(f"   Found {len(team_headers)} potential team headers for '{found_variation}'")
+            
             injury_table = None
             
-            # Walk through siblings to find the table
-            for sibling in team_header.find_next_siblings():
-                if sibling.name == 'table':
-                    injury_table = sibling
-                    break
-                # Stop if we hit another team header
-                if sibling.name in ['h3', 'h4'] and sibling != team_header:
-                    break
+            if team_headers:
+                # Get the first matching header
+                team_header = team_headers[0]
+                print(f"   ✅ Found team header: {team_header.name} - {team_header.get_text(strip=True)[:50]}")
+                
+                # Find the next table after this header
+                current = team_header
+                
+                # Walk through siblings to find the table
+                for sibling in team_header.find_next_siblings():
+                    if sibling.name == 'table':
+                        injury_table = sibling
+                        break
+                    # Stop if we hit another team header
+                    if sibling.name in ['h3', 'h4'] and sibling != team_header:
+                        break
+                
+                if not injury_table:
+                    # Try finding parent's next table
+                    parent = team_header.parent
+                    if parent:
+                        injury_table = parent.find_next('table')
             
+            # Method 2 (Fallback): Look through all tables for team name in rows
             if not injury_table:
-                # Try finding parent's next table
-                parent = team_header.parent
-                if parent:
-                    injury_table = parent.find_next('table')
+                print(f"   ⚠️  Header method failed, trying table scan...")
+                all_tables = soup.find_all('table')
+                print(f"   Scanning {len(all_tables)} tables...")
+                
+                for table in all_tables:
+                    # Check if table or nearby text contains team name
+                    table_context = str(table.parent)[:2000].lower()  # Check parent context
+                    
+                    # Use the found variation
+                    if found_variation and found_variation.lower() in table_context:
+                        # Make sure it's not just the team name appearing in injury data
+                        # Check if there's actual player data
+                        rows = table.find_all('tr')
+                        if len(rows) > 1:  # Has more than just header
+                            print(f"   ✅ Found potential table via scan (matched '{found_variation}')")
+                            injury_table = table
+                            break
             
             if not injury_table:
                 print(f"   ⚠️  No injury table found after team header")
