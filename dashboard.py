@@ -588,7 +588,12 @@ elif selected_market == "⚽ Football":
                             stake = max(5.0, kelly)
                             profit = (rec['odds'] - 1) * stake
                             st.write(f"**Profit:** +£{profit:.2f}")
-                            st.write(f"**Edge:** {rec.get('edge', 0):.1%}")
+                            st.write(f"**EV:** {rec.get('edge', 0):.1%}")
+                            
+                            # Show model vs odds probability
+                            model_prob = pred['probability']
+                            implied_prob = 1 / rec['odds']
+                            st.caption(f"Model: {model_prob:.1%} vs Odds: {implied_prob:.1%}")
                         
                         st.markdown("---")
                         
@@ -599,11 +604,15 @@ elif selected_market == "⚽ Football":
                         
                         with bet_col1:
                             st.markdown("**Traditional Bookmaker:**")
+                            
+                            # Safe default value
+                            default_odds = max(1.01, float(rec.get('odds', 2.0)))
+                            
                             actual_odds = st.number_input(
                                 "Your Odds",
                                 min_value=1.01,
                                 max_value=100.0,
-                                value=float(rec['odds']),
+                                value=default_odds,
                                 step=0.01,
                                 key=f"actual_odds_{pred['event']}"
                             )
@@ -619,14 +628,23 @@ elif selected_market == "⚽ Football":
                             
                             trad_profit = (actual_odds - 1) * actual_stake
                             st.success(f"**Profit if wins:** +£{trad_profit:.2f}")
+                            
+                            # Calculate EV for actual odds
+                            actual_ev = (model_prob * trad_profit) - ((1 - model_prob) * actual_stake)
+                            ev_color = "green" if actual_ev > 0 else "red"
+                            st.markdown(f"**Expected Value:** <span style='color:{ev_color}'>£{actual_ev:+.2f}</span>", unsafe_allow_html=True)
                         
                         with bet_col2:
                             st.markdown("**Betfair Exchange (Lay):**")
+                            
+                            # Safe default value for lay odds
+                            default_lay_odds = max(1.01, float(rec.get('odds', 2.0)) + 0.1)
+                            
                             lay_odds = st.number_input(
                                 "Lay Odds",
                                 min_value=1.01,
                                 max_value=100.0,
-                                value=float(rec['odds']) + 0.1,
+                                value=default_lay_odds,
                                 step=0.01,
                                 key=f"lay_odds_{pred['event']}"
                             )
@@ -741,6 +759,7 @@ elif selected_market == "⚽ Football":
                             profit = (rec['odds'] - 1) * stake
                             st.write(f"Stake: £{stake:.2f}")
                             st.write(f"Profit: +£{profit:.2f}")
+                            st.write(f"**EV:** {rec.get('edge', 0):.1%}")
                         
                         st.markdown("---")
                         
@@ -751,11 +770,15 @@ elif selected_market == "⚽ Football":
                         
                         with bet_col1:
                             st.markdown("**Traditional Bookmaker:**")
+                            
+                            # Safe default value
+                            default_odds_v = max(1.01, float(rec.get('odds', 2.0)))
+                            
                             actual_odds_v = st.number_input(
                                 "Your Odds",
                                 min_value=1.01,
                                 max_value=100.0,
-                                value=float(rec['odds']),
+                                value=default_odds_v,
                                 step=0.01,
                                 key=f"actual_odds_v_{pred['event']}"
                             )
@@ -771,14 +794,24 @@ elif selected_market == "⚽ Football":
                             
                             trad_profit_v = (actual_odds_v - 1) * actual_stake_v
                             st.success(f"**Profit if wins:** +£{trad_profit_v:.2f}")
+                            
+                            # Calculate EV
+                            model_prob_v = pred['probability']
+                            actual_ev_v = (model_prob_v * trad_profit_v) - ((1 - model_prob_v) * actual_stake_v)
+                            ev_color_v = "green" if actual_ev_v > 0 else "red"
+                            st.markdown(f"**Expected Value:** <span style='color:{ev_color_v}'>£{actual_ev_v:+.2f}</span>", unsafe_allow_html=True)
                         
                         with bet_col2:
                             st.markdown("**Betfair Exchange (Lay):**")
+                            
+                            # Safe default for lay odds
+                            default_lay_odds_v = max(1.01, float(rec.get('odds', 2.0)) + 0.1)
+                            
                             lay_odds_v = st.number_input(
                                 "Lay Odds",
                                 min_value=1.01,
                                 max_value=100.0,
-                                value=float(rec['odds']) + 0.1,
+                                value=default_lay_odds_v,
                                 step=0.01,
                                 key=f"lay_odds_v_{pred['event']}"
                             )
