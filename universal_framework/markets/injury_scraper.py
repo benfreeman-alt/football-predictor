@@ -113,50 +113,78 @@ class InjuryScraper:
             
             injuries = []
             
-            # PhysioRoom uses tables with class 'injury_table'
-            tables = soup.find_all('table', class_='injury_table')
+            # PhysioRoom structure: Team name appears before the injury table
+            # Look for the team name as a heading or in a div, then get the next table
             
-            if not tables:
-                # Try finding any tables
-                tables = soup.find_all('table')
-                print(f"   Found {len(tables)} tables (no class='injury_table')")
-            else:
-                print(f"   Found {len(tables)} injury tables")
+            # Find all text that contains the team name
+            team_headers = soup.find_all(['h3', 'h4', 'div', 'p'], string=lambda text: text and team_name.lower() in text.lower() if text else False)
             
-            for table in tables:
-                # Look for team name in the table or surrounding divs
-                table_section = str(table.parent)
+            print(f"   Found {len(team_headers)} potential team headers for '{team_name}'")
+            
+            if not team_headers:
+                print(f"   ⚠️  Team '{team_name}' not found on page")
+                return self._get_fallback_injuries(team_name)
+            
+            # Get the first matching header
+            team_header = team_headers[0]
+            print(f"   ✅ Found team header: {team_header.name} - {team_header.get_text(strip=True)[:50]}")
+            
+            # Find the next table after this header
+            current = team_header
+            injury_table = None
+            
+            # Walk through siblings to find the table
+            for sibling in team_header.find_next_siblings():
+                if sibling.name == 'table':
+                    injury_table = sibling
+                    break
+                # Stop if we hit another team header
+                if sibling.name in ['h3', 'h4'] and sibling != team_header:
+                    break
+            
+            if not injury_table:
+                # Try finding parent's next table
+                parent = team_header.parent
+                if parent:
+                    injury_table = parent.find_next('table')
+            
+            if not injury_table:
+                print(f"   ⚠️  No injury table found after team header")
+                return {
+                    'team': team_name,
+                    'injuries': [],
+                    'last_updated': datetime.now().isoformat(),
+                    'source': 'PhysioRoom (scraped - no injuries)'
+                }
+            
+            print(f"   ✅ Found injury table for {team_name}")
+            
+            # Parse the table
+            rows = injury_table.find_all('tr')
+            print(f"   Processing {len(rows)} rows...")
+            
+            for row in rows[1:]:  # Skip header row
+                cols = row.find_all('td')
                 
-                if team_name.lower() not in table_section.lower():
-                    continue
-                
-                print(f"   ✅ Found table section for {team_name}")
-                
-                # Parse injury rows
-                rows = table.find_all('tr')
-                print(f"   Processing {len(rows)} rows...")
-                
-                for row in rows[1:]:  # Skip header row
-                    cols = row.find_all('td')
-                    
-                    if len(cols) >= 3:
-                        try:
-                            player_name = cols[0].get_text(strip=True)
-                            injury_type = cols[1].get_text(strip=True)
-                            return_date = cols[2].get_text(strip=True) if len(cols) > 2 else "Unknown"
-                            
-                            # Skip header rows or empty cells
-                            if player_name and player_name not in ['Player', 'Name', '', 'Injury', 'Status']:
-                                injuries.append({
-                                    'player': player_name,
-                                    'injury': injury_type,
-                                    'return_date': return_date,
-                                    'status': 'Out'
-                                })
-                                print(f"      • {player_name}: {injury_type}")
-                        except Exception as e:
-                            print(f"      ⚠️  Error parsing row: {e}")
-                            continue
+                if len(cols) >= 2:
+                    try:
+                        player_name = cols[0].get_text(strip=True)
+                        injury_type = cols[1].get_text(strip=True)
+                        return_date = cols[2].get_text(strip=True) if len(cols) > 2 else "Unknown"
+                        
+                        # Skip header rows, empty cells, or team names
+                        skip_values = ['Player', 'Name', '', 'Injury', 'Status', 'Return', team_name]
+                        if player_name and player_name not in skip_values and len(player_name) > 2:
+                            injuries.append({
+                                'player': player_name,
+                                'injury': injury_type,
+                                'return_date': return_date,
+                                'status': 'Out'
+                            })
+                            print(f"      • {player_name}: {injury_type}")
+                    except Exception as e:
+                        print(f"      ⚠️  Error parsing row: {e}")
+                        continue
             
             if injuries:
                 print(f"   ✅ Scraped {len(injuries)} injuries for {team_name}")
@@ -172,7 +200,7 @@ class InjuryScraper:
                     'team': team_name,
                     'injuries': [],
                     'last_updated': datetime.now().isoformat(),
-                    'source': 'PhysioRoom (scraped)'
+                    'source': 'PhysioRoom (scraped - no injuries)'
                 }
         
         except requests.exceptions.Timeout:
