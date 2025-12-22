@@ -589,6 +589,137 @@ elif selected_market == "⚽ Football":
                             profit = (rec['odds'] - 1) * stake
                             st.write(f"**Profit:** +£{profit:.2f}")
                             st.write(f"**Edge:** {rec.get('edge', 0):.1%}")
+                        
+                        st.markdown("---")
+                        
+                        # Betting Options
+                        st.markdown("### 💰 Place Your Bet")
+                        
+                        bet_col1, bet_col2 = st.columns(2)
+                        
+                        with bet_col1:
+                            st.markdown("**Traditional Bookmaker:**")
+                            actual_odds = st.number_input(
+                                "Your Odds",
+                                min_value=1.01,
+                                max_value=100.0,
+                                value=float(rec['odds']),
+                                step=0.01,
+                                key=f"actual_odds_{pred['event']}"
+                            )
+                            
+                            actual_stake = st.number_input(
+                                "Your Stake (£)",
+                                min_value=1.0,
+                                max_value=10000.0,
+                                value=float(max(5.0, kelly)),
+                                step=1.0,
+                                key=f"actual_stake_{pred['event']}"
+                            )
+                            
+                            trad_profit = (actual_odds - 1) * actual_stake
+                            st.success(f"**Profit if wins:** +£{trad_profit:.2f}")
+                        
+                        with bet_col2:
+                            st.markdown("**Betfair Exchange (Lay):**")
+                            lay_odds = st.number_input(
+                                "Lay Odds",
+                                min_value=1.01,
+                                max_value=100.0,
+                                value=float(rec['odds']) + 0.1,
+                                step=0.01,
+                                key=f"lay_odds_{pred['event']}"
+                            )
+                            
+                            commission = st.number_input(
+                                "Commission %",
+                                min_value=0.0,
+                                max_value=10.0,
+                                value=2.0,
+                                step=0.5,
+                                key=f"commission_{pred['event']}"
+                            )
+                            
+                            # Calculate lay bet
+                            try:
+                                import sys
+                                sys.path.insert(0, 'universal_framework/markets')
+                                from lay_calculator import LayCalculator
+                                
+                                calc = LayCalculator(commission_rate=commission/100)
+                                comparison = calc.compare_bets(
+                                    traditional_stake=actual_stake,
+                                    traditional_odds=actual_odds,
+                                    lay_odds=lay_odds
+                                )
+                                
+                                lay_profit = comparison['lay']['profit']
+                                liability = comparison['lay']['liability']
+                                
+                                if comparison['comparison']['better_option'] == 'LAY':
+                                    st.success(f"**Lay profit:** +£{lay_profit:.2f}")
+                                    st.caption(f"Liability: £{liability:.2f}")
+                                    st.caption(f"✅ {comparison['comparison']['percentage_better']:.1f}% better than traditional")
+                                else:
+                                    st.info(f"**Lay profit:** +£{lay_profit:.2f}")
+                                    st.caption(f"Liability: £{liability:.2f}")
+                                    st.caption(f"Traditional bet is better")
+                            except Exception as e:
+                                st.caption(f"Lay calc error: {e}")
+                        
+                        # Add to tracker button
+                        st.markdown("---")
+                        
+                        track_col1, track_col2, track_col3 = st.columns([2, 2, 1])
+                        
+                        with track_col1:
+                            bet_direction = st.selectbox(
+                                "Bet Type",
+                                ["BACK (Normal bet)", "LAY (Betfair Exchange)"],
+                                key=f"direction_{pred['event']}"
+                            )
+                        
+                        with track_col2:
+                            if "LAY" in bet_direction:
+                                st.caption(f"Enter backer's stake: £{actual_stake / (lay_odds - 1):.2f}")
+                            else:
+                                st.caption(f"Stake: £{actual_stake:.2f}")
+                        
+                        with track_col3:
+                            if st.button("➕ Track Bet", key=f"track_{pred['event']}"):
+                                try:
+                                    import sys
+                                    sys.path.insert(0, 'universal_framework/markets')
+                                    from bet_tracker import BetTracker
+                                    
+                                    tracker = BetTracker()
+                                    
+                                    bet_direction_value = "LAY" if "LAY" in bet_direction else "BACK"
+                                    
+                                    if bet_direction_value == "LAY":
+                                        # For lay bets, use backer's stake
+                                        backers_stake = actual_stake / (lay_odds - 1)
+                                        tracker.add_bet(
+                                            match=pred['event'],
+                                            bet_type=f"Lay {rec['bet_type']}",
+                                            odds=lay_odds,
+                                            stake=backers_stake,
+                                            result="Pending",
+                                            bet_direction=bet_direction_value
+                                        )
+                                    else:
+                                        tracker.add_bet(
+                                            match=pred['event'],
+                                            bet_type=rec['bet_type'],
+                                            odds=actual_odds,
+                                            stake=actual_stake,
+                                            result="Pending",
+                                            bet_direction=bet_direction_value
+                                        )
+                                    
+                                    st.success("✅ Added to tracker!")
+                                except Exception as e:
+                                    st.error(f"Error: {e}")
             
             # Display VALUE BETS
             if value_bets:
@@ -610,6 +741,103 @@ elif selected_market == "⚽ Football":
                             profit = (rec['odds'] - 1) * stake
                             st.write(f"Stake: £{stake:.2f}")
                             st.write(f"Profit: +£{profit:.2f}")
+                        
+                        st.markdown("---")
+                        
+                        # Betting Options
+                        st.markdown("### 💰 Place Your Bet")
+                        
+                        bet_col1, bet_col2 = st.columns(2)
+                        
+                        with bet_col1:
+                            st.markdown("**Traditional Bookmaker:**")
+                            actual_odds_v = st.number_input(
+                                "Your Odds",
+                                min_value=1.01,
+                                max_value=100.0,
+                                value=float(rec['odds']),
+                                step=0.01,
+                                key=f"actual_odds_v_{pred['event']}"
+                            )
+                            
+                            actual_stake_v = st.number_input(
+                                "Your Stake (£)",
+                                min_value=1.0,
+                                max_value=10000.0,
+                                value=float(stake),
+                                step=1.0,
+                                key=f"actual_stake_v_{pred['event']}"
+                            )
+                            
+                            trad_profit_v = (actual_odds_v - 1) * actual_stake_v
+                            st.success(f"**Profit if wins:** +£{trad_profit_v:.2f}")
+                        
+                        with bet_col2:
+                            st.markdown("**Betfair Exchange (Lay):**")
+                            lay_odds_v = st.number_input(
+                                "Lay Odds",
+                                min_value=1.01,
+                                max_value=100.0,
+                                value=float(rec['odds']) + 0.1,
+                                step=0.01,
+                                key=f"lay_odds_v_{pred['event']}"
+                            )
+                            
+                            commission_v = st.number_input(
+                                "Commission %",
+                                min_value=0.0,
+                                max_value=10.0,
+                                value=2.0,
+                                step=0.5,
+                                key=f"commission_v_{pred['event']}"
+                            )
+                            
+                            # Calculate lay bet
+                            try:
+                                import sys
+                                sys.path.insert(0, 'universal_framework/markets')
+                                from lay_calculator import LayCalculator
+                                
+                                calc = LayCalculator(commission_rate=commission_v/100)
+                                comparison = calc.compare_bets(
+                                    traditional_stake=actual_stake_v,
+                                    traditional_odds=actual_odds_v,
+                                    lay_odds=lay_odds_v
+                                )
+                                
+                                lay_profit_v = comparison['lay']['profit']
+                                liability_v = comparison['lay']['liability']
+                                
+                                if comparison['comparison']['better_option'] == 'LAY':
+                                    st.success(f"**Lay profit:** +£{lay_profit_v:.2f}")
+                                    st.caption(f"Liability: £{liability_v:.2f}")
+                                    st.caption(f"✅ {comparison['comparison']['percentage_better']:.1f}% better")
+                                else:
+                                    st.info(f"**Lay profit:** +£{lay_profit_v:.2f}")
+                                    st.caption(f"Liability: £{liability_v:.2f}")
+                                    st.caption(f"Traditional better")
+                            except Exception as e:
+                                st.caption(f"Error: {e}")
+                        
+                        # Add to tracker
+                        if st.button("➕ Add to Tracker", key=f"track_v_{pred['event']}"):
+                            try:
+                                import sys
+                                sys.path.insert(0, 'universal_framework/markets')
+                                from bet_tracker import BetTracker
+                                
+                                tracker = BetTracker()
+                                tracker.add_bet(
+                                    match=pred['event'],
+                                    bet_type=rec['bet_type'],
+                                    odds=actual_odds_v,
+                                    stake=actual_stake_v,
+                                    result="Pending"
+                                )
+                                st.success("✅ Added!"
+)
+                            except Exception as e:
+                                st.error(f"Error: {e}")
             
             # Display MODEL ONLY (collapsed)
             if model_only:
