@@ -100,10 +100,19 @@ class BetTracker:
                 
                 if bet_direction == 'LAY':
                     # LAY BET LOGIC
+                    # stake = liability (what we're risking)
+                    # If we WIN the lay bet (selection loses), we keep the backer's stake minus commission
+                    # If we LOSE the lay bet (selection wins), we pay the liability
+                    
                     if result == "Won":
-                        bet['profit'] = bet['stake'] * 0.98  # Win backer's stake minus 2% commission
+                        # We won - selection lost
+                        # We keep the backer's stake (liability / (odds - 1)) minus 2% commission
+                        backers_stake = bet['stake'] / (bet['odds'] - 1)
+                        bet['profit'] = backers_stake * 0.98  # Win backer's stake minus commission
                     elif result == "Lost":
-                        bet['profit'] = -bet['stake'] * (bet['odds'] - 1)  # Pay liability
+                        # We lost - selection won
+                        # We pay the liability (which is the stake we stored)
+                        bet['profit'] = -bet['stake']  # Lose liability
                     else:  # Push
                         bet['profit'] = 0
                 else:

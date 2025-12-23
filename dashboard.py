@@ -733,13 +733,13 @@ elif selected_market == "⚽ Football":
                                     bet_direction_value = "LAY" if "LAY" in bet_direction else "BACK"
                                     
                                     if bet_direction_value == "LAY":
-                                        # For lay bets, use backer's stake
-                                        backers_stake = actual_stake / (lay_odds - 1)
+                                        # For lay bets, store liability as the stake (what you're risking)
+                                        liability = actual_stake * (lay_odds - 1)
                                         tracker.add_bet(
                                             match=pred['event'],
                                             bet_type=f"Lay {rec['bet_type']}",
                                             odds=lay_odds,
-                                            stake=backers_stake,
+                                            stake=liability,  # Use liability as stake
                                             result="Pending",
                                             bet_direction=bet_direction_value
                                         )
@@ -1117,8 +1117,8 @@ elif selected_market == "📈 Bet Tracking":
                     
                     # For lay bets, show liability
                     if bet_dir == 'LAY':
-                        liability = bet['stake'] * (bet['odds'] - 1)
-                        st.caption(f"{direction_badge} {bet['bet_type']} @ {bet['odds']:.2f} | Backer's stake: £{bet['stake']:.2f} | Your liability: £{liability:.2f}")
+                        liability = bet["stake"]  # stake IS liability now
+                        st.caption(f"{direction_badge} {bet['bet_type']} @ {bet['odds']:.2f} | Backer's stake: £{bet["stake"]/(bet["odds"]-1):.2f} | Your liability: £{liability:.2f}")
                     else:
                         st.caption(f"{direction_badge} {bet['bet_type']} @ {bet['odds']:.2f} | £{bet['stake']:.2f} staked")
                 
