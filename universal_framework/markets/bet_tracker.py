@@ -143,8 +143,8 @@ class BetTracker:
                 'avg_odds': 0
             }
         
-        settled = [b for b in self.bets if b['result']]
-        pending = [b for b in self.bets if not b['result']]
+        settled = [b for b in self.bets if b['result'] not in ['Pending', '', None]]
+        pending = [b for b in self.bets if b['result'] in ['Pending', '', None]]
         
         wins = [b for b in settled if b['result'] == 'Won']
         losses = [b for b in settled if b['result'] == 'Lost']

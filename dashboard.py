@@ -597,6 +597,22 @@ elif selected_market == "⚽ Football":
                         
                         st.markdown("---")
                         
+                        # Show Model Prediction Probability
+                        bet_type_display = rec['bet_type']
+                        
+                        # Calculate what the model thinks will win
+                        if 'Home Win' in bet_type_display:
+                            win_prob = model_prob
+                            prob_label = f"📊 Model predicts **Home Win**: {win_prob:.1%}"
+                        elif 'Away' in bet_type_display or 'Draw' in bet_type_display:
+                            win_prob = 1 - model_prob
+                            prob_label = f"📊 Model predicts **Away/Draw**: {win_prob:.1%}"
+                        else:
+                            win_prob = model_prob
+                            prob_label = f"📊 Model confidence: {win_prob:.1%}"
+                        
+                        st.info(prob_label)
+                        
                         # Betting Options
                         st.markdown("### 💰 Place Your Bet")
                         
@@ -629,10 +645,12 @@ elif selected_market == "⚽ Football":
                             trad_profit = (actual_odds - 1) * actual_stake
                             st.success(f"**Profit if wins:** +£{trad_profit:.2f}")
                             
-                            # Calculate EV for actual odds
-                            actual_ev = (model_prob * trad_profit) - ((1 - model_prob) * actual_stake)
-                            ev_color = "green" if actual_ev > 0 else "red"
-                            st.markdown(f"**Expected Value:** <span style='color:{ev_color}'>£{actual_ev:+.2f}</span>", unsafe_allow_html=True)
+                            # Calculate EV as percentage
+                            model_prob = pred['probability']
+                            expected_return = (model_prob * (actual_odds - 1)) - ((1 - model_prob) * 1)  # Per £1
+                            ev_percent = expected_return * 100  # Convert to %
+                            ev_color = "green" if ev_percent > 0 else "red"
+                            st.markdown(f"**Expected Value:** <span style='color:{ev_color}'>{ev_percent:+.1f}%</span>", unsafe_allow_html=True)
                         
                         with bet_col2:
                             st.markdown("**Betfair Exchange (Lay):**")
@@ -763,6 +781,23 @@ elif selected_market == "⚽ Football":
                         
                         st.markdown("---")
                         
+                        # Show Model Prediction Probability
+                        model_prob_v = pred['probability']
+                        bet_type_display_v = rec['bet_type']
+                        
+                        # Calculate what the model thinks will win
+                        if 'Home Win' in bet_type_display_v:
+                            win_prob_v = model_prob_v
+                            prob_label_v = f"📊 Model predicts **Home Win**: {win_prob_v:.1%}"
+                        elif 'Away' in bet_type_display_v or 'Draw' in bet_type_display_v:
+                            win_prob_v = 1 - model_prob_v
+                            prob_label_v = f"📊 Model predicts **Away/Draw**: {win_prob_v:.1%}"
+                        else:
+                            win_prob_v = model_prob_v
+                            prob_label_v = f"📊 Model confidence: {win_prob_v:.1%}"
+                        
+                        st.info(prob_label_v)
+                        
                         # Betting Options
                         st.markdown("### 💰 Place Your Bet")
                         
@@ -795,11 +830,12 @@ elif selected_market == "⚽ Football":
                             trad_profit_v = (actual_odds_v - 1) * actual_stake_v
                             st.success(f"**Profit if wins:** +£{trad_profit_v:.2f}")
                             
-                            # Calculate EV
+                            # Calculate EV as percentage
                             model_prob_v = pred['probability']
-                            actual_ev_v = (model_prob_v * trad_profit_v) - ((1 - model_prob_v) * actual_stake_v)
-                            ev_color_v = "green" if actual_ev_v > 0 else "red"
-                            st.markdown(f"**Expected Value:** <span style='color:{ev_color_v}'>£{actual_ev_v:+.2f}</span>", unsafe_allow_html=True)
+                            expected_return_v = (model_prob_v * (actual_odds_v - 1)) - ((1 - model_prob_v) * 1)  # Per £1
+                            ev_percent_v = expected_return_v * 100  # Convert to %
+                            ev_color_v = "green" if ev_percent_v > 0 else "red"
+                            st.markdown(f"**Expected Value:** <span style='color:{ev_color_v}'>{ev_percent_v:+.1f}%</span>", unsafe_allow_html=True)
                         
                         with bet_col2:
                             st.markdown("**Betfair Exchange (Lay):**")
@@ -1102,19 +1138,19 @@ elif selected_market == "📈 Bet Tracking":
                 with col3:
                     # Update result button
                     if bet['status'] == "Pending":
-                        with st.popover("Update", key=f"bet_popover_{idx}_{bet['id']}"):
+                        with st.popover("Update", key=f"bettrack_popover_{idx}_{bet['id']}"):
                             new_result = st.radio(
                                 "Result",
                                 ["Won", "Lost", "Push"],
-                                key=f"bet_result_{idx}_{bet['id']}"
+                                key=f"bettrack_result_{idx}_{bet['id']}"
                             )
-                            if st.button("Save", key=f"bet_save_{idx}_{bet['id']}"):
+                            if st.button("Save", key=f"bettrack_save_{idx}_{bet['id']}"):
                                 tracker.update_bet_result(bet['id'], new_result)
                                 st.success("Updated!")
                                 st.rerun()
                     
                     # Delete button
-                    if st.button("🗑️", key=f"bet_delete_{idx}_{bet['id']}", help="Delete bet"):
+                    if st.button("🗑️", key=f"bettrack_delete_{idx}_{bet['id']}", help="Delete bet"):
                         tracker.delete_bet(bet['id'])
                         st.rerun()
                 
