@@ -939,24 +939,101 @@ elif selected_market == "🗳️ Elections":
     - Betting market odds comparison
     """)
 
+
 # Bet Tracking Page
 elif selected_market == "📈 Bet Tracking":
     st.header("📈 Bet Tracking & Performance")
     st.markdown("**Track your bets and monitor ROI**")
     
-    st.info("💾 Your bet data is saved to `data/bet_tracking.json` and persists across sessions. Clearing Streamlit cache won't delete your bets!")
+    st.warning("""
+    ⚠️ **IMPORTANT: Data Persistence on Streamlit Cloud**
     
-    # Initialize bet tracker - ALWAYS reload from file (don't cache in session_state)
+    Streamlit Cloud has **ephemeral storage** - your bet data is deleted when the app restarts or redeploys.
+    
+    **To prevent data loss:**
+    1. Click **"⬇️ Download Bets"** below regularly to backup
+    2. After app restart, use **"⬆️ Upload Bets"** to restore
+    
+    Without backing up, your bets will be lost on restart!
+    """)
+    
+    # Initialize bet tracker
     try:
         import sys
         sys.path.insert(0, 'universal_framework/markets')
         from bet_tracker import BetTracker
         
-        # Create new instance each time - it loads from file
         tracker = BetTracker(data_file='data/bet_tracking.json')
     except Exception as e:
         st.error(f"Error loading bet tracker: {e}")
         st.stop()
+    
+    # Backup/Restore section
+    st.markdown("### 💾 Backup & Restore")
+    col1, col2, col3 = st.columns([1, 1, 2])
+    
+    with col1:
+        # Download button
+        if tracker.bets:
+            import json
+            bets_json = json.dumps(tracker.bets, indent=2)
+            st.download_button(
+                label="⬇️ Download Bets",
+                data=bets_json,
+                file_name=f"bet_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+                mime="application/json",
+                help="Save your bets to your computer"
+            )
+        else:
+            st.button("⬇️ Download Bets", disabled=True, help="No bets to download")
+    
+    with col2:
+        # Upload button
+        uploaded_file = st.file_uploader(
+            "⬆️ Restore Backup",
+            type="json",
+            help="Upload a previously downloaded backup file",
+            key="bet_upload",
+            label_visibility="collapsed"
+        )
+    
+    with col3:
+        st.caption("💡 Download regularly to prevent data loss!")
+    
+    # Handle file upload
+    if uploaded_file is not None:
+        try:
+            import json
+            restored_bets = json.load(uploaded_file)
+            
+            st.success(f"✅ Found {len(restored_bets)} bets in backup!")
+            
+            merge_col1, merge_col2 = st.columns(2)
+            
+            with merge_col1:
+                if st.button("🔄 Replace All Bets", key="replace_bets", help="Delete current bets and restore from backup"):
+                    tracker.bets = restored_bets
+                    tracker._save_bets()
+                    st.success(f"✅ Replaced with {len(restored_bets)} bets from backup!")
+                    st.rerun()
+            
+            with merge_col2:
+                if st.button("➕ Merge with Current", key="merge_bets", help="Add backup bets to current bets"):
+                    existing_ids = {b['id'] for b in tracker.bets}
+                    added = 0
+                    for bet in restored_bets:
+                        if bet['id'] not in existing_ids:
+                            tracker.bets.append(bet)
+                            added += 1
+                    
+                    tracker._save_bets()
+                    st.success(f"✅ Added {added} new bets from backup!")
+                    st.rerun()
+                    
+        except Exception as e:
+            st.error(f"❌ Error reading backup file: {e}")
+    
+    st.markdown("---")
     
     # Performance Stats
     st.markdown("---")
