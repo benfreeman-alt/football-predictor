@@ -47,12 +47,16 @@ class BetTracker:
         if profit is None and result:
             if bet_direction == 'LAY':
                 # LAY BET LOGIC
+                # stake parameter = liability (what we're risking)
                 if result == "Won":
-                    # You win the backer's stake (minus commission)
-                    profit = stake * 0.98  # 2% commission
+                    # We won - selection lost
+                    # We keep the backer's stake minus 2% commission
+                    backers_stake = stake / (odds - 1)
+                    profit = backers_stake * 0.98
                 elif result == "Lost":
-                    # You pay the liability
-                    profit = -stake * (odds - 1)
+                    # We lost - selection won
+                    # We pay the liability
+                    profit = -stake
                 else:  # Push
                     profit = 0
             else:
