@@ -645,9 +645,9 @@ elif selected_market == "⚽ Football":
                             trad_profit = (actual_odds - 1) * actual_stake
                             st.success(f"**Profit if wins:** +£{trad_profit:.2f}")
                             
-                            # Calculate EV as percentage
-                            model_prob = pred['probability']
-                            expected_return = (model_prob * (actual_odds - 1)) - ((1 - model_prob) * 1)  # Per £1
+                            # Calculate EV as percentage using the CORRECT probability
+                            # Use win_prob (already calculated based on bet type) not model_prob!
+                            expected_return = (win_prob * (actual_odds - 1)) - ((1 - win_prob) * 1)  # Per £1
                             ev_percent = expected_return * 100  # Convert to %
                             ev_color = "green" if ev_percent > 0 else "red"
                             st.markdown(f"**Expected Value:** <span style='color:{ev_color}'>{ev_percent:+.1f}%</span>", unsafe_allow_html=True)
@@ -830,9 +830,9 @@ elif selected_market == "⚽ Football":
                             trad_profit_v = (actual_odds_v - 1) * actual_stake_v
                             st.success(f"**Profit if wins:** +£{trad_profit_v:.2f}")
                             
-                            # Calculate EV as percentage
-                            model_prob_v = pred['probability']
-                            expected_return_v = (model_prob_v * (actual_odds_v - 1)) - ((1 - model_prob_v) * 1)  # Per £1
+                            # Calculate EV as percentage using correct probability
+                            # Use win_prob_v (already calculated based on bet type) not model_prob_v!
+                            expected_return_v = (win_prob_v * (actual_odds_v - 1)) - ((1 - win_prob_v) * 1)  # Per £1
                             ev_percent_v = expected_return_v * 100  # Convert to %
                             ev_color_v = "green" if ev_percent_v > 0 else "red"
                             st.markdown(f"**Expected Value:** <span style='color:{ev_color_v}'>{ev_percent_v:+.1f}%</span>", unsafe_allow_html=True)
