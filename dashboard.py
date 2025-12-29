@@ -717,7 +717,14 @@ elif selected_market == "⚽ Football":
                         
                         with track_col2:
                             if "LAY" in bet_direction:
-                                st.caption(f"Enter backer's stake: £{actual_stake / (lay_odds - 1):.2f}")
+                                try:
+                                    if lay_odds > 1.01:
+                                        backers_stake = actual_stake / (lay_odds - 1)
+                                        st.caption(f"Enter backer's stake: £{backers_stake:.2f}")
+                                    else:
+                                        st.caption("⚠️ Lay odds must be > 1.01")
+                                except:
+                                    st.caption("⚠️ Invalid lay odds")
                             else:
                                 st.caption(f"Stake: £{actual_stake:.2f}")
                         
@@ -734,15 +741,19 @@ elif selected_market == "⚽ Football":
                                     
                                     if bet_direction_value == "LAY":
                                         # For lay bets, store liability as the stake (what you're risking)
-                                        liability = actual_stake * (lay_odds - 1)
-                                        tracker.add_bet(
-                                            match=pred['event'],
-                                            bet_type=f"Lay {rec['bet_type']}",
-                                            odds=lay_odds,
-                                            stake=liability,  # Use liability as stake
-                                            result="Pending",
-                                            bet_direction=bet_direction_value
-                                        )
+                                        if lay_odds <= 1.01:
+                                            st.error("❌ Lay odds must be greater than 1.01")
+                                        else:
+                                            liability = actual_stake * (lay_odds - 1)
+                                            tracker.add_bet(
+                                                match=pred['event'],
+                                                bet_type=f"Lay {rec['bet_type']}",
+                                                odds=lay_odds,
+                                                stake=liability,  # Use liability as stake
+                                                result="Pending",
+                                                bet_direction=bet_direction_value
+                                            )
+                                            st.success("✅ Added to tracker!")
                                     else:
                                         tracker.add_bet(
                                             match=pred['event'],
@@ -752,8 +763,7 @@ elif selected_market == "⚽ Football":
                                             result="Pending",
                                             bet_direction=bet_direction_value
                                         )
-                                    
-                                    st.success("✅ Added to tracker!")
+                                        st.success("✅ Added to tracker!")
                                 except Exception as e:
                                     st.error(f"Error: {e}")
             
